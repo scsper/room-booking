@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+from campus.models import Room
+
+def index(request):
+    rooms = Room.objects.all()
+    return render(request, 'campus/index.html', {'rooms': rooms})

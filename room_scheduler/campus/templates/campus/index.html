@@ -1,0 +1,9 @@
+{% if rooms %}
+    <ul>
+    {% for room in rooms %}
+        <li>{{ room.name }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No rooms are available</p>
+{% endif %}

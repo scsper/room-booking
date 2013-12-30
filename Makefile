@@ -12,7 +12,7 @@ install:
 	sudo pip install django
 
 run:
-	python retreat/manage.py runserver [::]:8000
+	python room_scheduler/manage.py runserver [::]:8000
 
 clean:
 	rm *.pyc
