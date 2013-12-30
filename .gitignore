@@ -1,0 +1,4 @@
+.vagrant/
+retreat_db
+*.pyc
+retreat/db.sqlite3
