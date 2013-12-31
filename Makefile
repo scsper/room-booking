@@ -12,7 +12,13 @@ install:
 	sudo pip install django
 
 run:
-	python room_scheduler/manage.py runserver [::]:8000
+	python room_scheduler/manage.py runserver [::]:8000 --settings=room_scheduler.settings.local
+
+db: 
+	python room_scheduler/manage.py syncdb --settings=room_scheduler.settings.local
+
+test:
+	python room_scheduler/manage.py test room_scheduler --settings=room_scheduler.settings.test
 
 clean:
 	rm *.pyc
