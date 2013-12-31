@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
+    <h1><p>Rooms</p></h1>
     {% if rooms %}
         <ul>
         {% for room in rooms %}
@@ -10,6 +11,5 @@
         </ul>
     {% else %}
         <p>No rooms are available</p>
-
     {% endif %}
 {% endblock content %}

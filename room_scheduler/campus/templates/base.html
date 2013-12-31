@@ -15,7 +15,20 @@
         <div class="row-fluid">
             <div class="span2">
                 {% block sidebar %}
-                    <div>Hello sidebar!</div>
+                    {% if attributes %}
+                        <h1><p>Attributes</p></h1>
+                        <form action ="{% url 'campus:search'  %}">
+                        {% for attribute in attributes %}
+                            <label class="checkbox" for="attribute{{ forloop.counter }}">
+                                <input type=checkbox name="attributes" id="attribute{{ forloop.counter }}" value="{{ attribute.name }}">
+                                {{ attribute.name }}
+                            </label>
+                        {% endfor %}
+                        <input class="btn" type=submit value="Search">
+                        </form>
+                    {% else %}
+                        <p>No attributes are listed</p>
+                    {% endif %}
                 {% endblock sidebar %}
             </div>
 
