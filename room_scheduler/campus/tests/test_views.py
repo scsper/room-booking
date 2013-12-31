@@ -25,42 +25,17 @@ class CampusViewTests(TestCase):
 		self.assertContains(response, "Fellowship Hall")
 
 
-class AttributeViewTests(TestCase):
-
-	def setUp(self):
-		Attribute.objects.create(name="Piano")
-		Attribute.objects.create(name="Speakers")
-
-	def test_attributes_exist(self):
-		""" all of the attributes should be displayed in a checklist """
-
-		response = self.client.get(reverse('campus:attributes'))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, "Piano")
-		self.assertContains(response, "Speakers")
-
-		
 class NonExistenceViewTests(TestCase):
 
 	def test_no_rooms_exist(self):
 		"""
-		when no rooms exist the page should display 
+		when no rooms exist the page should display
 		'No rooms are available'
 		"""
 
 		response = self.client.get(reverse('campus:index'))
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
-
-	def test_no_attributes_exist(self):
-		"""
-		when no attributes exist the page should display 
-		'No attributes are listed'
-		"""
-
-		response = self.client.get(reverse('campus:attributes'))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'No attributes are listed')
 
 
 class SearchViewTests(TestCase):
@@ -69,6 +44,7 @@ class SearchViewTests(TestCase):
 		""" create some rooms and link them with attributes"""
 		Room.objects.create(name="Gym")
 		Room.objects.create(name="Sanctuary")
+		Room.objects.create(name="Charis")
 
 		Attribute.objects.create(name="Piano")
 		Attribute.objects.create(name="Speakers")
@@ -77,6 +53,7 @@ class SearchViewTests(TestCase):
 
 		self.r1 = Room.objects.get(pk=1)
 		self.r2 = Room.objects.get(pk=2)
+		self.r3 = Room.objects.get(pk=3)
 
 		self.a1 = Attribute.objects.get(pk=1)
 		self.a2 = Attribute.objects.get(pk=2)
@@ -117,4 +94,10 @@ class SearchViewTests(TestCase):
 
 	# def test_search_by_many_get_one(self):
 
-	# def test_search_by_many_get_many(self):
+	def test_search_by_many_get_many(self):
+		self.r3.attributes.add(self.a1, self.a2)
+		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name, 'attributes': self.a2.name})
+
+		self.assertContains(response, self.r1.name)
+		self.assertContains(response, self.r3.name)
+		self.assertNotContains(response, self.r2.name)
