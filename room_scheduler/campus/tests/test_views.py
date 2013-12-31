@@ -39,12 +39,12 @@ class AttributeViewTests(TestCase):
 		self.assertContains(response, "Piano")
 		self.assertContains(response, "Speakers")
 
-		
+
 class NonExistenceViewTests(TestCase):
 
 	def test_no_rooms_exist(self):
 		"""
-		when no rooms exist the page should display 
+		when no rooms exist the page should display
 		'No rooms are available'
 		"""
 
@@ -54,7 +54,7 @@ class NonExistenceViewTests(TestCase):
 
 	def test_no_attributes_exist(self):
 		"""
-		when no attributes exist the page should display 
+		when no attributes exist the page should display
 		'No attributes are listed'
 		"""
 
@@ -96,7 +96,7 @@ class SearchViewTests(TestCase):
 	def test_search_by_one_get_none(self):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a4.name})
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, "No rooms are listed")
+		self.assertContains(response, "No rooms are available")
 
 	def test_search_by_one_get_one(self):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name})
@@ -113,9 +113,18 @@ class SearchViewTests(TestCase):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name, 'attributes': self.a3.name})
 		self.assertEqual(response.status_code, 200)
 		print "Response: ", response
-		self.assertContains(response, "No rooms are listed")
+		self.assertContains(response, "No rooms are available")
 
 	# def test_search_by_many_get_one(self):
 
-	# def test_search_by_many_get_many(self):
+	def test_search_by_many_get_many(self):
+		self.r3.attributes.add(self.a1, self.a2)
+		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name, 'attributes': self.a2.name})
+
+		self.assertContains(response, self.r1.name)
+		self.assertContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
+		self.assertNotContains(response, self.r4.name)
+
+
 
