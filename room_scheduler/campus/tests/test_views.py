@@ -39,7 +39,6 @@ class NonExistenceViewTests(TestCase):
 
 
 class SearchViewTests(TestCase):
-
 	def setUp(self):
 		""" create some rooms and link them with attributes"""
 		Room.objects.create(name="Gym")
@@ -103,7 +102,12 @@ class SearchViewTests(TestCase):
 		self.assertNotContains(response, self.r2.name)
 		self.assertNotContains(response, self.r3.name)
 
-	# def test_search_by_many_get_one(self):
+	def test_search_by_many_get_one(self):
+		response = self.client.get(reverse('campus:search'), {'attributes': [self.a3.name, self.a2.name]})
+
+		self.assertContains(response, self.r2.name)
+		self.assertNotContains(response, self.r1.name)
+		self.assertNotContains(response, self.r3.name)
 
 	def test_search_by_many_get_many(self):
 		self.r3.attributes.add(self.a1, self.a2)
