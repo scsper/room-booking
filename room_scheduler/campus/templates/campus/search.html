@@ -1,0 +1,10 @@
+{% if attributes %}
+    <h1><p>Attributes</p></h1>
+    <ul>
+    {% for attribute in attributes %}
+        <li>{{ attribute }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No attributes are listed</p>
+{% endif %}
