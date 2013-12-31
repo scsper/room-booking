@@ -17,6 +17,9 @@ run:
 db: 
 	python room_scheduler/manage.py syncdb --settings=room_scheduler.settings.local
 
+shell:
+	python room_scheduler/manage.py shell --settings=room_scheduler.settings.local
+
 test:
 	python room_scheduler/manage.py test room_scheduler --settings=room_scheduler.settings.test
 
