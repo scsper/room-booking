@@ -74,23 +74,34 @@ class SearchViewTests(TestCase):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a4.name})
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
+		self.assertNotContains(response, self.r1.name)
+		self.assertNotContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
+
 
 	def test_search_by_one_get_one(self):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name})
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, self.r1.name)
+		self.assertNotContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
+
 
 	def test_search_by_one_get_many(self):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a2.name})
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, self.r1.name)
 		self.assertContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
+
 
 	def test_search_by_many_get_none(self):
 		response = self.client.get(reverse('campus:search'), {'attributes': self.a4.name, 'attributes': self.a3.name})
 		self.assertEqual(response.status_code, 200)
-		print "Response: ", response
 		self.assertContains(response, "No rooms are available")
+		self.assertNotContains(response, self.r1.name)
+		self.assertNotContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
 
 	# def test_search_by_many_get_one(self):
 
