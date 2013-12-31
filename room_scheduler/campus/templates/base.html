@@ -6,7 +6,8 @@
     </title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="{% static "css/normalize.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
     {% endblock stylesheets %}
 </head>
 <body>
@@ -16,5 +17,8 @@
         {% endblock content %}
     </div>
 
+    {% block javascript %}
+        <script type="text/javascript" href="{% static "campus/bootstrap/js/bootstrap.min.js" %}"></script>
+    {% endblock javascript %}
 </body>
 </html>
