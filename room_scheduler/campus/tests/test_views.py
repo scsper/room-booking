@@ -96,7 +96,7 @@ class SearchViewTests(TestCase):
 
 
 	def test_search_by_many_get_none(self):
-		response = self.client.get(reverse('campus:search'), {'attributes': self.a4.name, 'attributes': self.a3.name})
+		response = self.client.get(reverse('campus:search'), {'attributes': [self.a4.name, self.a3.name]})
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
 		self.assertNotContains(response, self.r1.name)
@@ -107,7 +107,7 @@ class SearchViewTests(TestCase):
 
 	def test_search_by_many_get_many(self):
 		self.r3.attributes.add(self.a1, self.a2)
-		response = self.client.get(reverse('campus:search'), {'attributes': self.a1.name, 'attributes': self.a2.name})
+		response = self.client.get(reverse('campus:search'), {'attributes': [self.a1.name, self.a2.name]})
 
 		self.assertContains(response, self.r1.name)
 		self.assertContains(response, self.r3.name)
