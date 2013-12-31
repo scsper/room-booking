@@ -118,4 +118,3 @@ class SearchViewTests(TestCase):
 	# def test_search_by_many_get_one(self):
 
 	# def test_search_by_many_get_many(self):
-
