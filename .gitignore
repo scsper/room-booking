@@ -1,4 +1,5 @@
 .vagrant/
-retreat_db
 *.pyc
-retreat/db.sqlite3
+room_scheduler/*/*.sqlite3
+room_scheduler/*.sqlite3
+
