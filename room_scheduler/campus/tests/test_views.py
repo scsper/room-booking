@@ -52,16 +52,6 @@ class NonExistenceViewTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
 
-	def test_no_attributes_exist(self):
-		"""
-		when no attributes exist the page should display
-		'No attributes are listed'
-		"""
-
-		response = self.client.get(reverse('campus:attributes'))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'No attributes are listed')
-
 
 class SearchViewTests(TestCase):
 
