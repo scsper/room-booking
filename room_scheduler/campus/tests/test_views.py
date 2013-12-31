@@ -25,21 +25,6 @@ class CampusViewTests(TestCase):
 		self.assertContains(response, "Fellowship Hall")
 
 
-class AttributeViewTests(TestCase):
-
-	def setUp(self):
-		Attribute.objects.create(name="Piano")
-		Attribute.objects.create(name="Speakers")
-
-	def test_attributes_exist(self):
-		""" all of the attributes should be displayed in a checklist """
-
-		response = self.client.get(reverse('campus:attributes'))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, "Piano")
-		self.assertContains(response, "Speakers")
-
-
 class NonExistenceViewTests(TestCase):
 
 	def test_no_rooms_exist(self):
