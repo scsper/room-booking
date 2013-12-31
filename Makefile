@@ -21,6 +21,7 @@ shell:
 	python room_scheduler/manage.py shell --settings=room_scheduler.settings.local
 
 test:
+	clear
 	python room_scheduler/manage.py test room_scheduler --settings=room_scheduler.settings.test
 
 clean:
