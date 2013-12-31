@@ -11,10 +11,20 @@
     {% endblock stylesheets %}
 </head>
 <body>
-    <div class="content">
-        {% block content %}
-            <div>Hello world!</div>
-        {% endblock content %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2">
+                {% block sidebar %}
+                    <div>Hello sidebar!</div>
+                {% endblock sidebar %}
+            </div>
+
+            <div class="span10">
+                {% block content %}
+                    <div>Hello world!</div>
+                {% endblock content %}
+            </div>
+        </div>
     </div>
 
     {% block javascript %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block content %}
+{% block sidebar %}
     {% if attributes %}
         <h1><p>Attributes</p></h1>
         <form action ="{% url 'campus:search'  %}">
@@ -14,4 +14,4 @@
     {% else %}
         <p>No attributes are listed</p>
     {% endif %}
-{% endblock content %}
+{% endblock sidebar %}
