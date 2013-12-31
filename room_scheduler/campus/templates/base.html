@@ -1,0 +1,20 @@
+{% load staticfiles %}
+<html>
+<head>
+    <title>
+        {% block title %}Home{% endblock title %}
+    </title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{% static "css/normalize.css" %}">
+    {% endblock stylesheets %}
+</head>
+<body>
+    <div class="content">
+        {% block content %}
+            <div>Hello world!</div>
+        {% endblock content %}
+    </div>
+
+</body>
+</html>
