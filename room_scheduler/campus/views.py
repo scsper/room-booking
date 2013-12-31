@@ -17,4 +17,4 @@ def search(request):
     for attribute in attributes:
         rooms = rooms.filter(attributes__name=attribute)
 
-    return render(request, 'campus/search.html', {'attributes': attributes})
+    return render(request, 'campus/search.html', {'rooms': rooms})

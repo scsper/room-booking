@@ -2,14 +2,14 @@
 {% load staticfiles %}
 
 {% block content %}
-    {% if attributes %}
-        <h1><p>Attributes</p></h1>
+    {% if rooms %}
+        <h1><p>Rooms</p></h1>
         <ul>
-        {% for attribute in attributes %}
-            <li>{{ attribute }}</li>
+        {% for room in rooms %}
+            <li>{{ room }}</li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>No attributes are listed</p>
+        <p>No rooms are listed</p>
     {% endif %}
 {% endblock content %}
