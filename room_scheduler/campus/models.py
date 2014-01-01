@@ -7,6 +7,9 @@ class Attribute(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_rooms(self):
+    	return ", ".join([room.name for room in self.room_set.all()])
+
 class Room(models.Model):
     name = models.CharField(max_length=50)
     occupancy = models.IntegerField(default=0)
