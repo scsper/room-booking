@@ -37,7 +37,14 @@ class NonExistenceViewTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
 
-
+	def test_no_attributes_exist(self):
+		"""
+		when no attributes exist the panel should display
+		'No attributes are listed'
+		"""
+		response = self.client.get(reverse('campus:index'))
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, "No attributes are listed")
 
 
 class AttributeSearchViewTests(TestCase):
