@@ -10,6 +10,7 @@ cookbooks:
 install:
 	sudo apt-get install python-pip
 	sudo pip install django
+	sudo pip install South
 
 run:
 	python room_scheduler/manage.py runserver [::]:8000 --settings=room_scheduler.settings.local
