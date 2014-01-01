@@ -18,8 +18,6 @@ class RoomTestCase(TestCase):
     def test_room_occupancy(self):
         r = Room.objects.get(pk=1)
         self.assertEquals(r.occupancy, 10)
-        r.occupancy = 58
-        self.assertEquals(r.occupancy, 58)
 
     def test_room_attributes(self):
         rooms = Room.objects.all()

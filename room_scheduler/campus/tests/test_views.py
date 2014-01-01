@@ -38,7 +38,9 @@ class NonExistenceViewTests(TestCase):
 		self.assertContains(response, "No rooms are available")
 
 
-class SearchViewTests(TestCase):
+
+
+class AttributeSearchViewTests(TestCase):
 	def setUp(self):
 		""" create some rooms and link them with attributes"""
 		Room.objects.create(name="Gym")
@@ -95,7 +97,7 @@ class SearchViewTests(TestCase):
 
 
 	def test_search_by_many_get_none(self):
-		response = self.client.get(reverse('campus:search'), {'attributes': [self.a4.name, self.a3.name]})
+		response = self.client.get(reverse('campus:search'), {'attributes': [self.a1.name, self.a3.name]})
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, "No rooms are available")
 		self.assertNotContains(response, self.r1.name)
@@ -116,3 +118,39 @@ class SearchViewTests(TestCase):
 		self.assertContains(response, self.r1.name)
 		self.assertContains(response, self.r3.name)
 		self.assertNotContains(response, self.r2.name)
+
+
+class OccupancySearchViewTests(TestCase):
+
+	def setUp(self):
+		Room.objects.create(name="Gym", occupancy=10)
+		Room.objects.create(name="Sanctuary", occupancy=100)
+		Room.objects.create(name="Charis", occupancy=1000)
+
+		self.r1 = Room.objects.get(pk=1)
+		self.r2 = Room.objects.get(pk=2)
+		self.r3 = Room.objects.get(pk=3)
+
+	def test_search_by_occupancy_none_below_all_above(self):
+		response = self.client.get(reverse('campus:search'), {'occupancy': 0})
+
+		self.assertContains(response, self.r1.name)
+		self.assertContains(response, self.r2.name)
+		self.assertContains(response, self.r3.name)
+
+	def test_search_by_occupancy_some_below_some_above(self):
+		response = self.client.get(reverse('campus:search'), {'occupancy': 15})
+
+		self.assertNotContains(response, self.r1.name)
+		self.assertContains(response, self.r2.name)
+		self.assertContains(response, self.r3.name)
+
+	def test_search_by_occupancy_all_below_none_above(self):
+		response = self.client.get(reverse('campus:search'), {'occupancy': 1500})
+
+		self.assertNotContains(response, self.r1.name)
+		self.assertNotContains(response, self.r2.name)
+		self.assertNotContains(response, self.r3.name)
+
+
+
