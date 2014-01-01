@@ -1,7 +1,10 @@
 from django.contrib import admin
 from campus.models import Room, Attribute
 
-admin.site.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+	list_display = ('name', 'occupancy', 'get_attributes')
+
+admin.site.register(Room, RoomAdmin)
 admin.site.register(Attribute)
 
 

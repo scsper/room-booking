@@ -15,4 +15,7 @@ class Room(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_attributes(self):
+    	return ", ".join([attribute.name for attribute in self.attributes.all()])
+
 
