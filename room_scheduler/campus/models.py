@@ -9,6 +9,7 @@ class Attribute(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=50)
+    occupancy = models.IntegerField(default=0)
     attributes = models.ManyToManyField(Attribute)
 
     def __unicode__(self):
