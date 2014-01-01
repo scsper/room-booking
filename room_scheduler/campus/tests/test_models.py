@@ -6,7 +6,7 @@ from campus.models import Attribute
 
 class RoomTestCase(TestCase):
     def setUp(self):
-        Room.objects.create(name="Gym")
+        Room.objects.create(name="Gym", occupancy=10)
 
         Attribute.objects.create(name="Piano")
         Attribute.objects.create(name="Speakers")
@@ -14,6 +14,12 @@ class RoomTestCase(TestCase):
     def test_room_name(self):
         r = Room.objects.get(pk=1)
         self.assertEquals(r.name, "Gym")
+
+    def test_room_occupancy(self):
+        r = Room.objects.get(pk=1)
+        self.assertEquals(r.occupancy, 10)
+        r.occupancy = 58
+        self.assertEquals(r.occupancy, 58)
 
     def test_room_attributes(self):
         rooms = Room.objects.all()

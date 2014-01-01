@@ -8,10 +8,6 @@ def index(request):
 
     return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': attributes})
 
-def attributes(request):
-    attributes = Attribute.objects.all()
-    return render(request, 'campus/attributes.html', {'attributes': attributes})
-
 def search(request):
     searchAttributes = request.GET.getlist('attributes')
     attributes = Attribute.objects.all()
@@ -21,3 +17,4 @@ def search(request):
         rooms = rooms.filter(attributes__name=attribute)
 
     return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': attributes})
+
