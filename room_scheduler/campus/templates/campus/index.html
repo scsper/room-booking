@@ -6,7 +6,7 @@
     {% if rooms %}
         <ul>
         {% for room in rooms %}
-            <li>{{ room.name }}</li>
+            <li><a href="/booking/{{ room.id }}/">{{ room.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}

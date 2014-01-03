@@ -2,6 +2,8 @@
 	<ul>
 	{% for event in room.event_set.all %}
 		<li>{{ event.name }}</li>
+	{% empty %}
+		<p>No events listed for this room</p>
 	{% endfor %}
 	</ul>
 <a href="/booking/{{ room.id }}/create_event">Create an event</a>
