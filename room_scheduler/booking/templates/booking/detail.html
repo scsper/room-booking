@@ -1,0 +1,7 @@
+<h1>{{ room.name }} Events</h1>
+	<ul>
+	{% for event in room.event_set.all %}
+		<li>{{ event.name }}</li>
+	{% endfor %}
+	</ul>
+<a href="/booking/{{ room.id }}/create_event">Create an event</a>
