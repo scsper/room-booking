@@ -1,17 +1,19 @@
 from django.db import models
+import datetime
 
 from campus.models import Room, Attribute
 
-# Create your models here.
+
 class Event(models.Model):
     name = models.CharField(max_length=50)
-    notes = models.CharField(max_length=500)
+    notes = models.CharField(max_length=500, blank=True)
     setupTime = models.DateTimeField()
     eventTime = models.DateTimeField()
     teardownTime = models.DateTimeField()
     endTime = models.DateTimeField()
     attributes = models.ManyToManyField(Attribute)
-    series = models.ForeignKey(Series)
+    series = models.ForeignKey('Series', null=True, blank=True)
+    room = models.ForeignKey(Room)
 
     def __unicode__(self):
         return self.name
@@ -19,7 +21,7 @@ class Event(models.Model):
 
 class Series(models.Model):
     name = models.CharField(max_length=50)
-    notes = models.CharField(max_length=500)
+    notes = models.CharField(max_length=500, blank=True)
     setupTime = models.DateTimeField()
     eventTime = models.DateTimeField()
     teardownTime = models.DateTimeField()
@@ -31,8 +33,8 @@ class Series(models.Model):
 
 
 class InfinitelyRecurring(models.Model):
-    series = models.ForeignKey(Series)
-    frequency = models.ForeignKey(Frequency)
+    series = models.ForeignKey('Series')
+    frequency = models.ForeignKey('Frequency')
 
     def __unicode__(self):
         return self.series.name
@@ -43,3 +45,4 @@ class Frequency(models.Model):
 
     def __unicode__(self):
         return self.name
+

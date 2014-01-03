@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'campus',
+    'booking',
 )
 
 MIDDLEWARE_CLASSES = (
