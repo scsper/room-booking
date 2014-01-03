@@ -24,7 +24,7 @@
                                 {{ attribute.name }}
                             </label>
                         {% endfor %}
-                        Occupancy: <input type="text" name="occupancy">
+                        Occupancy: <input type="text" name="occupancy" onFocus="if(this.value==0)this.value='';" value=0>
                         <input class="btn" type=submit value="Search">
                         </form>
                     {% else %}
