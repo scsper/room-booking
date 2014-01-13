@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+import pytz
 
 from campus.models import Room, Attribute
 

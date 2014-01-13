@@ -11,11 +11,12 @@ install:
 	sudo apt-get install python-pip
 	sudo pip install django
 	sudo pip install South
+	sudo easy_install --upgrade pytz
 
 run:
 	python room_scheduler/manage.py runserver [::]:8000 --settings=room_scheduler.settings.local
 
-db: 
+db:
 	python room_scheduler/manage.py syncdb --settings=room_scheduler.settings.local
 
 shell:

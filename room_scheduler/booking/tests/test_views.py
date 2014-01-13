@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 from datetime import timedelta
 import datetime
+import pytz
 
 from booking.models import Series, Event, Frequency, InfinitelyRecurring
 from campus.models import Room, Attribute
@@ -14,18 +15,19 @@ class DetailViewTests(TestCase):
 		""" create some events to display"""
 		self.r1 = Room.objects.create(name='Gym')
 
-		self.time_now = datetime.datetime.now()
+		self.time_now = datetime.datetime.utcnow()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
 		self.event1 = Event.objects.create(name='Deacon Meeting',
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
 			room = self.r1)
 		self.event2 = Event.objects.create(name='Basketball Game',
-			setupTime = self.time_now + timedelta(days=2), 
-			eventTime = self.time_now + timedelta(days=2, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=2, hours=3), 
+			setupTime = self.time_now + timedelta(days=2),
+			eventTime = self.time_now + timedelta(days=2, minutes=30),
+			teardownTime = self.time_now + timedelta(days=2, hours=3),
 			endTime = self.time_now + timedelta(days=2, hours=3, minutes=30),
 			room = self.r1)
 

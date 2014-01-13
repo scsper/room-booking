@@ -1,6 +1,7 @@
 from django.test import TestCase
 from datetime import timedelta
 import datetime
+import pytz
 
 from booking.models import Series, Event, Frequency, InfinitelyRecurring
 from campus.models import Room, Attribute
@@ -9,28 +10,30 @@ from campus.models import Room, Attribute
 class EventTestCase(TestCase):
 	def setUp(self):
 		self.time_now = datetime.datetime.now()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
 
 		self.r1 = Room.objects.create(name='Gym')
 
 		self.event = Event.objects.create(name='event',
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
 			room = self.r1)
 
 		self.a1 = Attribute.objects.create(name='Speakers')
 		self.a2 = Attribute.objects.create(name='Piano')
 
-		self.s1 = Series.objects.create(name='series1', 
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+		self.s1 = Series.objects.create(name='series1',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
-		self.s2 = Series.objects.create(name='series2', 
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+		self.s2 = Series.objects.create(name='series2',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
 	def test_event_name(self):
@@ -79,28 +82,30 @@ class EventTestCase(TestCase):
 class SeriesTestCase(TestCase):
 	def setUp(self):
 		self.time_now = datetime.datetime.now()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
-		self.series = Series.objects.create(name='series1', 
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+
+		self.series = Series.objects.create(name='series1',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
-		
+
 		self.a1 = Attribute.objects.create(name='Speakers')
 		self.a2 = Attribute.objects.create(name='Piano')
 
 		self.r1 = Room.objects.create(name='Gym')
 
 		self.e1 = Event.objects.create(name='event1',
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
 			room = self.r1)
 		self.e2 = Event.objects.create(name='event2',
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
 			room = self.r1)
 
@@ -156,10 +161,12 @@ class SeriesTestCase(TestCase):
 class InfinitelyRecurringTestCase(TestCase):
 	def setUp(self):
 		self.time_now = datetime.datetime.now()
-		self.s1 = Series.objects.create(name='series', 
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
+		self.s1 = Series.objects.create(name='series',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.f1 = Frequency.objects.create(name='freq')
 
@@ -175,11 +182,13 @@ class InfinitelyRecurringTestCase(TestCase):
 class FrequencyTestCase(TestCase):
 	def setUp(self):
 		self.time_now = datetime.datetime.now()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
 		self.freq = Frequency.objects.create(name='freq1')
-		self.series = Series.objects.create(name='series', 
-			setupTime = self.time_now + timedelta(days=1), 
-			eventTime = self.time_now + timedelta(days=1, minutes=30), 
-			teardownTime = self.time_now + timedelta(days=1, hours=3), 
+		self.series = Series.objects.create(name='series',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
 			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.infini1 = InfinitelyRecurring.objects.create(series_id=self.series.pk, frequency_id=self.freq.pk)
 		self.infini2 = InfinitelyRecurring.objects.create(series_id=self.series.pk, frequency_id=self.freq.pk)
