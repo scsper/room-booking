@@ -22,14 +22,15 @@ class DetailViewTests(TestCase):
 			setupTime = self.time_now + timedelta(days=1),
 			eventTime = self.time_now + timedelta(days=1, minutes=30),
 			teardownTime = self.time_now + timedelta(days=1, hours=3),
-			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
-			room = self.r1)
+			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.event2 = Event.objects.create(name='Basketball Game',
 			setupTime = self.time_now + timedelta(days=2),
 			eventTime = self.time_now + timedelta(days=2, minutes=30),
 			teardownTime = self.time_now + timedelta(days=2, hours=3),
-			endTime = self.time_now + timedelta(days=2, hours=3, minutes=30),
-			room = self.r1)
+			endTime = self.time_now + timedelta(days=2, hours=3, minutes=30))
+
+		self.event1.rooms.add(self.r1)
+		self.event2.rooms.add(self.r1)
 
 	def test_events_displayed(self):
 		response = self.client.get(reverse('booking:detail', args={self.r1.pk}))

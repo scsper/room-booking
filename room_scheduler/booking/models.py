@@ -14,7 +14,7 @@ class Event(models.Model):
     endTime = models.DateTimeField()
     attributes = models.ManyToManyField(Attribute)
     series = models.ForeignKey('Series', null=True, blank=True)
-    room = models.ForeignKey(Room)
+    rooms = models.ManyToManyField(Room, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -27,15 +27,18 @@ class Series(models.Model):
     eventTime = models.DateTimeField()
     teardownTime = models.DateTimeField()
     endTime = models.DateTimeField()
-    attributes = models.ManyToManyField(Attribute)
+    attributes = models.ManyToManyField(Attribute, null=True, blank=True)
+    rooms = models.ManyToManyField(Room, null=True, blank=True)
+
+    # this needs a room
 
     def __unicode__(self):
         return self.name
 
 
 class InfinitelyRecurring(models.Model):
-    series = models.ForeignKey('Series')
-    frequency = models.ForeignKey('Frequency')
+    series = models.ForeignKey('Series', null=True, blank=True)
+    frequency = models.ForeignKey('Frequency', null=True, blank=True)
 
     def __unicode__(self):
         return self.series.name
