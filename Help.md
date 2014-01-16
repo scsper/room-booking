@@ -1,7 +1,20 @@
+### Performing a South migration
+
+###### For a new app:
+* Look at the South docs to figure this out before you add anything to the model
+
+###### Converting an existing app:
+```
+make conversion myapp
+```
+
+###### Performing the migration:
+```
+make migrate myapp
+```
 
 
-
-### INSTRUCTIONS ON HOW TO USE THE DJANGO SUPERUSER MODEL IN THE SHELL
+### Using the Django superuser model in shell
 
 ###### To create a superuser from scratch:
 * make shell

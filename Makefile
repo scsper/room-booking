@@ -13,6 +13,14 @@ install:
 	sudo pip install South
 	sudo easy_install --upgrade pytz
 
+conversion:
+	db
+	python room_scheduler/manage.py convert_to_south $(APP) --settings=room_scheduler.settings.local
+
+migrate:
+	python room_scheduler/manage.py schemamigration $(APP) --auto --settings=room_scheduler.settings.local
+	python room_scheduler/manage.py migrate $(APP) --settings=room_scheduler.settings.local
+
 run:
 	python room_scheduler/manage.py runserver [::]:8000 --settings=room_scheduler.settings.local
 
