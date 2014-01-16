@@ -10,7 +10,7 @@ make conversion myapp
 
 ###### Performing the migration:
 ```
-make migrate myapp
+make migration myapp
 ```
 
 
