@@ -3,4 +3,4 @@
 room_scheduler/*/*.sqlite3
 room_scheduler/*.sqlite3
 *.swp
-
+room_scheduler/*/migrations
