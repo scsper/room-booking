@@ -1,0 +1,63 @@
+{% load staticfiles %}
+<html>
+<head>
+    <title>
+        {% block title %}Home{% endblock title %}
+    </title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
+    {% endblock stylesheets %}
+</head>
+<body>
+
+	<h1>Create an event for {{ room.name }}</h1>
+	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+	<form action="{% url 'booking:create' room.id %}" method="post">
+	{% csrf_token %}
+
+		<p>Event name:<input type="text" name="name" maxLength=50>*
+		<br>Event notes:<input type="text" name="notes" maxLength=500></p>
+
+		<p>Setup time (HH:MM AM/PM):<input type="time" name="setupTime">*
+		<br>Date (MM-DD-YYYY):<input type="date" name="setupDate">*
+
+		<p>Event time (HH:MM AM/PM):<input type="time" name="eventTime">*
+		<br>Date (MM-DD-YYYY):<input type="date" name="eventDate">*
+
+		<p>Teardown time (HH:MM AM/PM):<input type="time" name="teardownTime">*
+		<br>Date (MM-DD-YYYY):<input type="date" name="teardownDate">*
+		
+		<p>End time (HH:MM AM/PM):<input type="time" name="endTime">*
+		<br>Date (MM-DD-YYYY):<input type="date" name="endDate">*</p>
+
+		<p>Required attributes for event:</br>
+		<ul>
+			{% for attribute in attributes %}
+        		<label class="checkbox" for="attribute{{ forloop.counter }}">
+            	<input type=checkbox name="attributes" id="attribute{{ forloop.counter }}" value="{{ attribute.name }}">
+            	{{ attribute.name }}
+            	</label>
+        	{% endfor %}
+    	</ul>
+
+		<p>Series:(Leave blank for none)</p>
+		<ul>
+			{% for serie in series %}
+				<label class="radio" for="serie{{ forloop.counter }}">
+				<input type=radio name="series" id="serie{{ forloop.counter }}" value="{{ serie.name }}">
+				{{ serie.name }}
+				</label>
+			{% empty %}
+				<li>Create a series</li>
+			{% endfor %}
+		</ul>
+
+		<p><input class="btn" type=submit value="Create Event"></p>
+	</form>
+	<br>* means field is required</br>
+	<a href="/campus/"> Return to campus view</a>
+
+</body>

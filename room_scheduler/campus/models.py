@@ -20,5 +20,5 @@ class Room(models.Model):
 
     def get_attributes(self):
     	return ", ".join([attribute.name for attribute in self.attributes.all()])
-
+        
 

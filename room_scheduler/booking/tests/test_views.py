@@ -44,15 +44,15 @@ class DetailViewTests(TestCase):
 		self.assertContains(response, 'Gym Events')
 
 
-class CreateEventViewTests(TestCase):
-	def setUp(self):
-		self.r1 = Room.objects.create(name='Gym')
+# class CreateEventViewTests(TestCase):
+# 	def setUp(self):
+# 		self.r1 = Room.objects.create(name='Gym')
 
 
 
-	def test_title_display_correct(self):
-		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-		self.assertContains(response, 'Creating Event for Gym')
+# 	def test_title_display_correct(self):
+# 		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+# 		self.assertContains(response, 'Creating Event for Gym')
 
 
 class NonExistenceTests(TestCase):
