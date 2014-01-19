@@ -46,20 +46,28 @@ def create(request, room_id):
 	if(endDate == ""):
 		endDate = setupDate
 
-	# Check for AM/PM if not present 7:31-11:59 default am, 12:00-7:30 default pm
+	# Check for AM/PM
+	# if not present 7:31-11:59 default am, 12:00-7:30 default pm
 	timeStrs = [setupTime, eventTime, teardownTime, endTime]
-	validTimeStrEnds = "am","pm"
+	validTimeStrEnds = "AM","PM"
 	for i in range(len(timeStrs)):
 		if not timeStrs[i].endswith(validTimeStrEnds):
 			timeStrs[i] = timeStrs[i].rstrip()
 			timeNum = timeStrs[i].partition(":")
-			if(int(timeNum[0]) <= 7 and int(timeNum[2]) <= 30):
-				timeStrs[i] = timeStrs[i] + " am"
-			else:
-				timeStrs[i] = timeStrs[i] + " pm"
+			if int(timeNum[0]) == 7:
+				if int(timeNum[2]) > 30:
+					timeStrs[i] = timeStrs[i] + " AM"
+				else:
+					timeStrs[i] = timeStrs[i] + " PM"
+			if int(timeNum[0]) > 7 and int(timeNum[0]) < 12:
+				timeStrs[i] = timeStrs[i] + " AM"
+			if int(timeNum[0]) < 7 or int(timeNum[0]) == 12:
+				timeStrs[i] = timeStrs[i] + " PM"
 
-	print timeStrs
-
+	setupTime = timeStrs[0]
+	eventTime = timeStrs[1]
+	teardownTime = timeStrs[2]
+	endTime = timeStrs[3]
 
 	# Create times from strings and check if improperly formatted
 	try:
@@ -78,13 +86,47 @@ def create(request, room_id):
 	dtTeardownTime = dtTeardownTime.replace(tzinfo=pytz.utc)
 	dtEndTime = dtEndTime.replace(tzinfo=pytz.utc)
 
+	# Check dates in order
+	if(dtEventTime.date() < dtSetupTime.date()):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Event Date cannot be before Setup Date"})
+	if(dtEndTime.date() < dtTeardownTime.date()):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Date cannot be before End Date"})
+	if(dtTeardownTime.date() < dtEventTime.date() or (dtTeardownTime.date() - dtEventTime.date()).day == 0):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Date must be after Event Date"})
+
+	# Check times in order
+	if(dtEventTime < dtSetupTime):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Event Time cannot be before Setup Time"})
+	if(dtEndTime < dtTeardownTime):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Time cannot be before End Time"})
+	if(dtTeardownTime < dtEventTime or (dtTeardownTime - dtEventTime).seconds == 0):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Time must be after Event Time"})
+
+	# Check times are in the future
+
+	# Create the Event
 	event = Event.objects.create(name=name, notes=request.POST['notes'],
 		setupTime=dtSetupTime, eventTime=dtEventTime, teardownTime=dtTeardownTime, endTime=dtEndTime)
+	# Attach attributes to Event
 	for attribute in attributes:
 		event.attributes.add(Attribute.objects.get(name=attribute))
+	# If event is reoccuring, add the series
 	if series is not None:
 		event.series.add(series)
 
+	# Attach the event to the room
 	event.rooms.add(room)
 	print event
 
