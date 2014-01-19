@@ -50,9 +50,8 @@
 				<input type=radio name="series" id="serie{{ forloop.counter }}" value="{{ serie.name }}">
 				{{ serie.name }}
 				</label>
-			{% empty %}
-				<li>Create a series</li>
 			{% endfor %}
+			<label>Create a series</label>
 		</ul>
 
 		<p><input class="btn" type=submit value="Create Event"></p>

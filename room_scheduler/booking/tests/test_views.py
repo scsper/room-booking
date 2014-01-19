@@ -44,15 +44,54 @@ class DetailViewTests(TestCase):
 		self.assertContains(response, 'Gym Events')
 
 
-# class CreateEventViewTests(TestCase):
+class CreateEventViewTests(TestCase):
+	def setUp(self):
+		self.r1 = Room.objects.create(name='Gym')
+		self.a1 = Attribute.objects.create(name="Projector")
+		self.a2 = Attribute.objects.create(name="Piano")
+
+		self.r1.attributes.add(self.a1, self.a2)
+
+		self.time_now = datetime.datetime.now()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
+		self.series = Series.objects.create(name='series1',
+			setupTime = self.time_now + timedelta(days=1),
+			eventTime = self.time_now + timedelta(days=1, minutes=30),
+			teardownTime = self.time_now + timedelta(days=1, hours=3),
+			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+
+	def test_title_display_correct(self):
+		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+		self.assertContains(response, 'Create an event for Gym')
+
+	def test_attribute_input_display(self):
+		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+		self.assertContains(response, 'Room attributes needed for event:')
+		self.assertContains(response, 'Projector')
+		self.assertContains(response, 'Piano')
+
+	def test_series_input_display(self):
+		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+		self.assertContains(response, 'Series:(Leave blank for none)')
+		self.assertContains(response, 'series1')
+		self.assertContains(response, 'Create a series')
+
+
+# class CreateViewTests(TestCase):
 # 	def setUp(self):
-# 		self.r1 = Room.objects.create(name='Gym')
 
 
+# 	def test_no_required_fields_filled(self):
+# 	def test_some_required_fields_filled(self):
+# 	def test_all_required_fields_filled_correct(self):
+# 	def test_only_setup_date_entered(self):
+# 	def test_all_dates_correctly(self):
+# 	def test_one_date_wrong_format(self):
+# 	def test_some_dates_wrong_format(self):
+# 	def test_all_dates_wrong_format(self):
+# 	def test_event_date_before_setup_date(self):
 
-# 	def test_title_display_correct(self):
-# 		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-# 		self.assertContains(response, 'Creating Event for Gym')
 
 
 class NonExistenceTests(TestCase):
@@ -62,3 +101,11 @@ class NonExistenceTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Gym Events')
 		self.assertContains(response, 'No events listed for this room')
+
+	def test_no_series_in_create_event_view(self):
+		r1 = Room.objects.create(name='Gym')
+		response = self.client.get(reverse('booking:create_event', args={r1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Series:(Leave blank for none)')
+		self.assertContains(response, 'Create a series')
+		self.assertEqual(len(r1.series_set.all()), 0)

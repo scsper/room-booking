@@ -49,7 +49,7 @@ def create(request, room_id):
 	# Check for AM/PM
 	# if not present 7:31-11:59 default am, 12:00-7:30 default pm
 	timeStrs = [setupTime, eventTime, teardownTime, endTime]
-	validTimeStrEnds = "AM","PM"
+	validTimeStrEnds = "am","pm","AM","PM"
 	for i in range(len(timeStrs)):
 		if not timeStrs[i].endswith(validTimeStrEnds):
 			timeStrs[i] = timeStrs[i].rstrip()
@@ -71,10 +71,10 @@ def create(request, room_id):
 
 	# Create times from strings and check if improperly formatted
 	try:
-		dtSetupTime = datetime.strptime(setupDate + " " + setupTime, "%m-%d-%Y %H:%M %p")
-		dtEventTime = datetime.strptime(eventDate + " " + eventTime, "%m-%d-%Y %H:%M %p")
-		dtTeardownTime = datetime.strptime(teardownDate + " " + teardownTime, "%m-%d-%Y %H:%M %p")
-		dtEndTime = datetime.strptime(endDate + " " + endTime, "%m-%d-%Y %H:%M %p")
+		dtSetupTime = datetime.strptime(setupDate + " " + setupTime, "%m-%d-%Y %I:%M %p")
+		dtEventTime = datetime.strptime(eventDate + " " + eventTime, "%m-%d-%Y %I:%M %p")
+		dtTeardownTime = datetime.strptime(teardownDate + " " + teardownTime, "%m-%d-%Y %I:%M %p")
+		dtEndTime = datetime.strptime(endDate + " " + endTime, "%m-%d-%Y %I:%M %p")
 	except (ValueError):
 		return render(request, 'booking/create_event.html', 
 			{'room': room, 'attributes': room.attributes.all(),
@@ -91,30 +91,36 @@ def create(request, room_id):
 		return render(request, 'booking/create_event.html', 
 			{'room': room, 'attributes': room.attributes.all(),
 			'series': Series.objects.all(), 'error_message': "Event Date cannot be before Setup Date"})
+	if(dtTeardownTime.date() < dtEventTime.date()):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Date must be after Event Date"})
 	if(dtEndTime.date() < dtTeardownTime.date()):
 		return render(request, 'booking/create_event.html', 
 			{'room': room, 'attributes': room.attributes.all(),
 			'series': Series.objects.all(), 'error_message': "Teardown Date cannot be before End Date"})
-	if(dtTeardownTime.date() < dtEventTime.date() or (dtTeardownTime.date() - dtEventTime.date()).day == 0):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Date must be after Event Date"})
-
+	
 	# Check times in order
 	if(dtEventTime < dtSetupTime):
 		return render(request, 'booking/create_event.html', 
 			{'room': room, 'attributes': room.attributes.all(),
 			'series': Series.objects.all(), 'error_message': "Event Time cannot be before Setup Time"})
-	if(dtEndTime < dtTeardownTime):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Time cannot be before End Time"})
 	if(dtTeardownTime < dtEventTime or (dtTeardownTime - dtEventTime).seconds == 0):
 		return render(request, 'booking/create_event.html', 
 			{'room': room, 'attributes': room.attributes.all(),
 			'series': Series.objects.all(), 'error_message': "Teardown Time must be after Event Time"})
+	if(dtEndTime < dtTeardownTime):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Teardown Time cannot be before End Time"})
 
 	# Check times are in the future
+	timeNow = datetime.now()
+	timeNow = timeNow.replace(tzinfo=pytz.utc)
+	if(dtSetupTime < timeNow):
+		return render(request, 'booking/create_event.html', 
+			{'room': room, 'attributes': room.attributes.all(),
+			'series': Series.objects.all(), 'error_message': "Times must be in the future"})
 
 	# Create the Event
 	event = Event.objects.create(name=name, notes=request.POST['notes'],
@@ -128,7 +134,6 @@ def create(request, room_id):
 
 	# Attach the event to the room
 	event.rooms.add(room)
-	print event
 
 	return HttpResponseRedirect(reverse('booking:detail', args=(room.id,)))
 
