@@ -11,8 +11,6 @@ class EventTestCase(TestCase):
         self.time_now = datetime.datetime.now()
         self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
-
-
         self.event = Event.objects.create(name='event',
             setupTime = self.time_now + timedelta(days=1),
             eventTime = self.time_now + timedelta(days=1, minutes=30),

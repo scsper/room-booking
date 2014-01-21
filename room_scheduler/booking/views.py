@@ -8,6 +8,8 @@ import pytz
 from booking.models import Event, Series
 from campus.models import Room, Attribute
 
+from booking.forms import CreateEventForm
+
 def detail(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
     return render(request, 'booking/detail.html', {'room': room})
@@ -19,122 +21,37 @@ def create_event(request, room_id):
 def create(request, room_id):
 	room = get_object_or_404(Room, pk=room_id)
 
-	# Gather variables
-	name = request.POST['name']
-	setupTime = request.POST['setupTime']
-	setupDate = request.POST['setupDate']
-	eventTime = request.POST['eventTime']
-	eventDate = request.POST['eventDate']
-	teardownTime = request.POST['teardownTime']
-	teardownDate = request.POST['teardownDate']
-	endTime = request.POST['endTime']
-	endDate = request.POST['endDate']
-	attributes = request.POST.getlist('attributes')
-	series = request.POST.get('series')
+	if request.method == "POST":
+		print "*** method was a POST!"
+		form = CreateEventForm(request.POST)
+		if form.is_valid():
+			print "*** form was valid!"
+			form.save()
+			print "*** form was saved!"
 
-	# Check required fields are filled
-	if( name == "" or setupTime == "" or eventTime == "" or teardownTime == "" or endTime == "" or setupDate == ""):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Enter all required fields"})
-
-	# If dates are left blank set to same day as setup
-	if(eventDate == ""):
-		eventDate = setupDate
-	if(teardownDate == ""):
-		teardownDate = setupDate
-	if(endDate == ""):
-		endDate = setupDate
-
-	# Check for AM/PM
-	# if not present 7:31-11:59 default am, 12:00-7:30 default pm
-	timeStrs = [setupTime, eventTime, teardownTime, endTime]
-	validTimeStrEnds = "am","pm","AM","PM"
-	for i in range(len(timeStrs)):
-		if not timeStrs[i].endswith(validTimeStrEnds):
-			timeStrs[i] = timeStrs[i].rstrip()
-			timeNum = timeStrs[i].partition(":")
-			if int(timeNum[0]) == 7:
-				if int(timeNum[2]) > 30:
-					timeStrs[i] = timeStrs[i] + " AM"
-				else:
-					timeStrs[i] = timeStrs[i] + " PM"
-			if int(timeNum[0]) > 7 and int(timeNum[0]) < 12:
-				timeStrs[i] = timeStrs[i] + " AM"
-			if int(timeNum[0]) < 7 or int(timeNum[0]) == 12:
-				timeStrs[i] = timeStrs[i] + " PM"
-
-	setupTime = timeStrs[0]
-	eventTime = timeStrs[1]
-	teardownTime = timeStrs[2]
-	endTime = timeStrs[3]
-
-	# Create times from strings and check if improperly formatted
-	try:
-		dtSetupTime = datetime.strptime(setupDate + " " + setupTime, "%m-%d-%Y %I:%M %p")
-		dtEventTime = datetime.strptime(eventDate + " " + eventTime, "%m-%d-%Y %I:%M %p")
-		dtTeardownTime = datetime.strptime(teardownDate + " " + teardownTime, "%m-%d-%Y %I:%M %p")
-		dtEndTime = datetime.strptime(endDate + " " + endTime, "%m-%d-%Y %I:%M %p")
-	except (ValueError):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Enter dates and times correctly"})
-
-	# Make times aware
-	dtSetupTime = dtSetupTime.replace(tzinfo=pytz.utc)
-	dtEventTime = dtEventTime.replace(tzinfo=pytz.utc)
-	dtTeardownTime = dtTeardownTime.replace(tzinfo=pytz.utc)
-	dtEndTime = dtEndTime.replace(tzinfo=pytz.utc)
-
-	# Check dates in order
-	if(dtEventTime.date() < dtSetupTime.date()):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Event Date cannot be before Setup Date"})
-	if(dtTeardownTime.date() < dtEventTime.date()):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Date must be after Event Date"})
-	if(dtEndTime.date() < dtTeardownTime.date()):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Date cannot be before End Date"})
-	
-	# Check times in order
-	if(dtEventTime < dtSetupTime):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Event Time cannot be before Setup Time"})
-	if(dtTeardownTime < dtEventTime or (dtTeardownTime - dtEventTime).seconds == 0):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Time must be after Event Time"})
-	if(dtEndTime < dtTeardownTime):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Teardown Time cannot be before End Time"})
-
-	# Check times are in the future
-	timeNow = datetime.now()
-	timeNow = timeNow.replace(tzinfo=pytz.utc)
-	if(dtSetupTime < timeNow):
-		return render(request, 'booking/create_event.html', 
-			{'room': room, 'attributes': room.attributes.all(),
-			'series': Series.objects.all(), 'error_message': "Times must be in the future"})
+		print "*** return redirect!"
+		return HttpResponseRedirect(reverse('booking:detail', args=(room.id)))
 
 	# Create the Event
-	event = Event.objects.create(name=name, notes=request.POST['notes'],
-		setupTime=dtSetupTime, eventTime=dtEventTime, teardownTime=dtTeardownTime, endTime=dtEndTime)
+	# event = Event.objects.create(name=name, notes=request.POST['notes'], setupTime=dtSetupTime, eventTime=dtEventTime, teardownTime=dtTeardownTime, endTime=dtEndTime)
+
 	# Attach attributes to Event
-	for attribute in attributes:
-		event.attributes.add(Attribute.objects.get(name=attribute))
-	# If event is reoccuring, add the series
-	if series is not None:
-		event.series.add(series)
+	# for attribute in attributes:
+	#     event.attributes.add(Attribute.objects.get(name=attribute))
 
-	# Attach the event to the room
-	event.rooms.add(room)
+	# # If event is reoccuring, add the series
+	# if series is not None:
+	#     event.series.add(series)
 
-	return HttpResponseRedirect(reverse('booking:detail', args=(room.id,)))
+	# # Attach the event to the room
+	# event.rooms.add(room)
 
-# Create your views here.
+	##        return HttpResponseRedirect(reverse('booking:detail', args=(room.id,)))
+	else:
+		print "*** method was a GET!"
+
+		form = CreateEventForm()
+
+	# we errored if we came to this point
+	return render(request, 'booking/create_event.html', {})
+
