@@ -138,6 +138,13 @@ class OccupancySearchViewTests(TestCase):
 		self.r2 = Room.objects.get(pk=2)
 		self.r3 = Room.objects.get(pk=3)
 
+	def test_empty_occupancy(self):
+		response = self.client.get(reverse('campus:search'))
+
+		self.assertContains(response, self.r1.name)
+		self.assertContains(response, self.r2.name)
+		self.assertContains(response, self.r3.name)
+
 	def test_search_by_occupancy_none_below_all_above(self):
 		response = self.client.get(reverse('campus:search'), {'occupancy': 0})
 
