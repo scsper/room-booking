@@ -138,28 +138,37 @@ class OccupancySearchViewTests(TestCase):
 		self.r2 = Room.objects.get(pk=2)
 		self.r3 = Room.objects.get(pk=3)
 
-	def test_empty_occupancy(self):
+
+	def test_when_occupancy_is_empty(self):
+		# all rooms should be returned because occupancy should default
+		# to 0 when there is no value entered by the user
 		response = self.client.get(reverse('campus:search'))
 
 		self.assertContains(response, self.r1.name)
 		self.assertContains(response, self.r2.name)
 		self.assertContains(response, self.r3.name)
 
-	def test_search_by_occupancy_none_below_all_above(self):
+
+	def test_when_all_rooms_have_a_higher_occupancy(self):
+		# all rooms should be returned because all rooms have an occupancy greater than 0
 		response = self.client.get(reverse('campus:search'), {'occupancy': 0})
 
 		self.assertContains(response, self.r1.name)
 		self.assertContains(response, self.r2.name)
 		self.assertContains(response, self.r3.name)
 
-	def test_search_by_occupancy_some_below_some_above(self):
+
+	def test_when_some_rooms_have_a_higher_occupancy(self):
+		# only rooms with a occupancy higher than 15 should be returned
 		response = self.client.get(reverse('campus:search'), {'occupancy': 15})
 
 		self.assertNotContains(response, self.r1.name)
 		self.assertContains(response, self.r2.name)
 		self.assertContains(response, self.r3.name)
 
-	def test_search_by_occupancy_all_below_none_above(self):
+
+	def test_when_no_rooms_have_a_higher_occupancy(self):
+		# no rooms should be returned because the highest occupancy is 1000
 		response = self.client.get(reverse('campus:search'), {'occupancy': 1500})
 
 		self.assertNotContains(response, self.r1.name)
