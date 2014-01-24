@@ -15,10 +15,6 @@ def detail(request, room_id):
     return render(request, 'booking/detail.html', {'room': room})
 
 def create_event(request, room_id):
-    room = get_object_or_404(Room, pk=room_id)
-    return render(request, 'booking/create_event.html', {'room': room, 'attributes': room.attributes.all(), 'series': Series.objects.all()})
-
-def create(request, room_id):
 	room = get_object_or_404(Room, pk=room_id)
 
 	if request.method == "POST":
@@ -28,9 +24,8 @@ def create(request, room_id):
 			print "*** form was valid!"
 			form.save()
 			print "*** form was saved!"
-
-		print "*** return redirect!"
-		return HttpResponseRedirect(reverse('booking:detail', args=(room.id)))
+			print "*** return redirect!"
+			return HttpResponseRedirect(reverse('booking:detail', args=(room.id)))
 
 	# Create the Event
 	# event = Event.objects.create(name=name, notes=request.POST['notes'], setupTime=dtSetupTime, eventTime=dtEventTime, teardownTime=dtTeardownTime, endTime=dtEndTime)
@@ -49,9 +44,13 @@ def create(request, room_id):
 	##        return HttpResponseRedirect(reverse('booking:detail', args=(room.id,)))
 	else:
 		print "*** method was a GET!"
-
 		form = CreateEventForm()
 
 	# we errored if we came to this point
-	return render(request, 'booking/create_event.html', {})
+	return render(request, 'booking/create_event.html', {
+		'form': form,
+		'room': room
+	})
+
+    # return render(request, 'booking/create_event.html', {'room': room, 'attributes': room.attributes.all(), 'series': Series.objects.all()})
 

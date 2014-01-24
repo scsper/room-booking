@@ -1,64 +1,36 @@
 {% load staticfiles %}
 <html>
-<head>
-    <title>
-        {% block title %}Home{% endblock title %}
-    </title>
+    <head>
+        <title>
+            {% block title %}Home{% endblock title %}
+        </title>
 
-    {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
-        <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
-    {% endblock stylesheets %}
-</head>
-<body>
+        {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
+            <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
+            <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css">
+        {% endblock stylesheets %}
 
-	<h1>Create an event for {{ room.name }}</h1>
-	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
 
-	<form action="{% url 'booking:create' room.id %}" method="post">
-	{% csrf_token %}
+    </head>
+    <body>
 
-		<p>Event name:<input type="text" name="name" maxLength=50>*
-		<br>Event notes:<input type="text" name="notes" maxLength=500></p>
+        <form action="{% url 'booking:create_event' room.id %}" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+        </form>
 
-		<p>Setup Date:<input type="date" name="setupDate"> (MM-DD-YYYY)*
-		<br>Setup Time:<input type="time" name="setupTime"> (HH:MM AM/PM)*
+        <script>
+            var setup_dates = function() {
+                $("#id_setupTime").datepicker({ dateFormat: 'yy-mm-dd' });
+                $("#id_eventTime").datepicker({ dateFormat: 'yy-mm-dd' });
+                $("#id_teardownTime").datepicker({ dateFormat: 'yy-mm-dd' });
+                $("#id_endTime").datepicker({ dateFormat: 'yy-mm-dd' });
+            };
 
-		<p>Event Date:<input type="date" name="eventDate"> (MM-DD-YYYY)
-		<br>Event Time:<input type="time" name="eventTime"> (HH:MM AM/PM)*
-
-		<p>Teardown Date:<input type="date" name="teardownDate"> (MM-DD-YYYY)
-		<br>Teardown Time:<input type="time" name="teardownTime"> (HH:MM AM/PM)*
-		
-		<p>End Date:<input type="date" name="endDate"> (MM-DD-YYYY)
-		<br>End Time:<input type="time" name="endTime"> (HH:MM AM/PM)*</p>
-
-		<p>Room attributes needed for event:</br>
-		<ul>
-			{% for attribute in attributes %}
-        		<label class="checkbox" for="attribute{{ forloop.counter }}">
-            	<input type=checkbox name="attributes" id="attribute{{ forloop.counter }}" value="{{ attribute.name }}">
-            	{{ attribute.name }}
-            	</label>
-        	{% endfor %}
-    	</ul>
-
-		<p>Series:(Leave blank for none)</p>
-		<ul>
-			{% for serie in series %}
-				<label class="radio" for="serie{{ forloop.counter }}">
-				<input type=radio name="series" id="serie{{ forloop.counter }}" value="{{ serie.name }}">
-				{{ serie.name }}
-				</label>
-			{% endfor %}
-			<label>Create a series</label>
-		</ul>
-
-		<p><input class="btn" type=submit value="Create Event"></p>
-	</form>
-	<div>
-		<br>* means field is required</br>
-	</div>
-	<a href="/campus/"> Return to campus view</a>
-
-</body>
+            setup_dates();
+        </script>
+    </body>
+</html>
