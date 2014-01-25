@@ -45,37 +45,37 @@ class DetailViewTests(TestCase):
 
 
 class CreateEventViewTests(TestCase):
-	def setUp(self):
-		self.r1 = Room.objects.create(name='Gym')
-		self.a1 = Attribute.objects.create(name="Projector")
-		self.a2 = Attribute.objects.create(name="Piano")
+	# def setUp(self):
+	# 	self.r1 = Room.objects.create(name='Gym')
+	# 	self.a1 = Attribute.objects.create(name="Projector")
+	# 	self.a2 = Attribute.objects.create(name="Piano")
 
-		self.r1.attributes.add(self.a1, self.a2)
+	# 	self.r1.attributes.add(self.a1, self.a2)
 
-		self.time_now = datetime.datetime.now()
-		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+	# 	self.time_now = datetime.datetime.now()
+	# 	self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
-		self.series = Series.objects.create(name='series1',
-			setupTime = self.time_now + timedelta(days=1),
-			eventTime = self.time_now + timedelta(days=1, minutes=30),
-			teardownTime = self.time_now + timedelta(days=1, hours=3),
-			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+	# 	self.series = Series.objects.create(name='series1',
+	# 		setupTime = self.time_now + timedelta(days=1),
+	# 		eventTime = self.time_now + timedelta(days=1, minutes=30),
+	# 		teardownTime = self.time_now + timedelta(days=1, hours=3),
+	# 		endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
-	def test_title_display_correct(self):
-		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-		self.assertContains(response, 'Create an event for Gym')
+	# def test_title_display_correct(self):
+	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+	# 	self.assertContains(response, 'Create an event for Gym')
 
-	def test_attribute_input_display(self):
-		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-		self.assertContains(response, 'Room attributes needed for event:')
-		self.assertContains(response, 'Projector')
-		self.assertContains(response, 'Piano')
+	# def test_attribute_input_display(self):
+	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+	# 	self.assertContains(response, 'Room attributes needed for event:')
+	# 	self.assertContains(response, 'Projector')
+	# 	self.assertContains(response, 'Piano')
 
-	def test_series_input_display(self):
-		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-		self.assertContains(response, 'Series:(Leave blank for none)')
-		self.assertContains(response, 'series1')
-		self.assertContains(response, 'Create a series')
+	# def test_series_input_display(self):
+	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+	# 	self.assertContains(response, 'Series:(Leave blank for none)')
+	# 	self.assertContains(response, 'series1')
+	# 	self.assertContains(response, 'Create a series')
 
 
 # class CreateViewTests(TestCase):
