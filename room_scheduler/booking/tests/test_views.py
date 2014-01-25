@@ -44,7 +44,7 @@ class DetailViewTests(TestCase):
 		self.assertContains(response, 'Gym Events')
 
 
-class CreateEventViewTests(TestCase):
+# class CreateEventViewTests(TestCase):
 	# def setUp(self):
 	# 	self.r1 = Room.objects.create(name='Gym')
 	# 	self.a1 = Attribute.objects.create(name="Projector")
