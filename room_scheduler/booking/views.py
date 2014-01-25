@@ -18,14 +18,11 @@ def create_event(request, room_id):
 	room = get_object_or_404(Room, pk=room_id)
 
 	if request.method == "POST":
-		print "*** method was a POST!"
 		form = CreateEventForm(request.POST)
+		print 'Raw Data: "%s"' % request.body
 		if form.is_valid():
-			print "*** form was valid!"
 			form.save()
-			print "*** form was saved!"
-			print "*** return redirect!"
-			return HttpResponseRedirect(reverse('booking:detail', args=(room.id)))
+			return HttpResponseRedirect(reverse('booking:detail', args=[room.id]))
 
 	# Create the Event
 	# event = Event.objects.create(name=name, notes=request.POST['notes'], setupTime=dtSetupTime, eventTime=dtEventTime, teardownTime=dtTeardownTime, endTime=dtEndTime)
@@ -43,7 +40,6 @@ def create_event(request, room_id):
 
 	##        return HttpResponseRedirect(reverse('booking:detail', args=(room.id,)))
 	else:
-		print "*** method was a GET!"
 		form = CreateEventForm()
 
 	# we errored if we came to this point
