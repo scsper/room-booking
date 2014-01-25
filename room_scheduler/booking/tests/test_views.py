@@ -101,11 +101,3 @@ class NonExistenceTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Gym Events')
 		self.assertContains(response, 'No events listed for this room')
-
-	def test_no_series_in_create_event_view(self):
-		r1 = Room.objects.create(name='Gym')
-		response = self.client.get(reverse('booking:create_event', args={r1.pk}))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'Series:(Leave blank for none)')
-		self.assertContains(response, 'Create a series')
-		self.assertEqual(len(r1.series_set.all()), 0)
