@@ -44,7 +44,6 @@ class CreateEventForm(ModelForm):
             raise ValidationError("Event date cannot be after teardown date.")
         if(teardown.date() > end.date()):
             raise ValidationError("Teardown date cannot be after end date.")
-
         if(setup > event):
             raise ValidationError("Setup time cannot be after the event time.")
         if(event > teardown or (teardown - event).seconds == 0): # does teardown == event work?

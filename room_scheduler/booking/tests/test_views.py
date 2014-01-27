@@ -8,6 +8,8 @@ import pytz
 
 from booking.models import Series, Event, Frequency, InfinitelyRecurring
 from campus.models import Room, Attribute
+from booking.forms import CreateEventForm
+
 
 
 class DetailViewTests(TestCase):
@@ -44,54 +46,87 @@ class DetailViewTests(TestCase):
 		self.assertContains(response, 'Gym Events')
 
 
-# class CreateEventViewTests(TestCase):
-	# def setUp(self):
-	# 	self.r1 = Room.objects.create(name='Gym')
-	# 	self.a1 = Attribute.objects.create(name="Projector")
-	# 	self.a2 = Attribute.objects.create(name="Piano")
+class CreateEventViewTests(TestCase):
+	def setUp(self):
+		self.r1 = Room.objects.create(name='Gym')
+		self.a1 = Attribute.objects.create(name="Projector")
+		self.a2 = Attribute.objects.create(name="Piano")
 
-	# 	self.r1.attributes.add(self.a1, self.a2)
+		self.r1.attributes.add(self.a1, self.a2)
 
-	# 	self.time_now = datetime.datetime.now()
-	# 	self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+		self.time_now = datetime.datetime.now()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
-	# 	self.series = Series.objects.create(name='series1',
-	# 		setupTime = self.time_now + timedelta(days=1),
-	# 		eventTime = self.time_now + timedelta(days=1, minutes=30),
-	# 		teardownTime = self.time_now + timedelta(days=1, hours=3),
-	# 		endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+		# self.series = Series.objects.create(name='series1',
+		# 	setupTime = self.time_now + timedelta(days=1),
+		# 	eventTime = self.time_now + timedelta(days=1, minutes=30),
+		# 	teardownTime = self.time_now + timedelta(days=1, hours=3),
+		# 	endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
-	# def test_title_display_correct(self):
-	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-	# 	self.assertContains(response, 'Create an event for Gym')
+	def test_create_event_with_unfilled_form(self):
+		""" Test that the form displays the view with the right template in the event that the form is unbound"""
+		response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
+		context = response.context
+		status = response.status_code
 
-	# def test_attribute_input_display(self):
-	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-	# 	self.assertContains(response, 'Room attributes needed for event:')
-	# 	self.assertContains(response, 'Projector')
-	# 	self.assertContains(response, 'Piano')
-
-	# def test_series_input_display(self):
-	# 	response = self.client.get(reverse('booking:create_event', args={self.r1.pk}))
-	# 	self.assertContains(response, 'Series:(Leave blank for none)')
-	# 	self.assertContains(response, 'series1')
-	# 	self.assertContains(response, 'Create a series')
+		self.assertEqual(status, 200)
+		self.assertTemplateUsed(response, 'booking/create_event.html')
+		self.assertIsInstance(context['room'], Room)
+		self.assertIsInstance(context['form'], CreateEventForm)
+		# TODO: can't figure out how to test whether a form is unbound or not
 
 
-# class CreateViewTests(TestCase):
-# 	def setUp(self):
+	def test_create_event_with_incorrect_form(self):
+		""" Test that the form does not redirect to a confirmation page if incorrect data is entered"""
+		post_data = {
+			'setupTime_0': ['2014-01-30'],
+			'setupTime_1': ['5:00'],
+			'eventTime_0': ['2014-01-30'],
+			'eventTime_1': ['4:00'],
+			'teardownTime_0': ['2014-01-30'],
+			'teardownTime_1': ['6:00'],
+			"endTime_0": ['2014-01-30'],
+			"endTime_1": ['7:00'],
+			'name': ['Incorrect Event'],
+			'notes': ['The times are backwards!'],
+			'rooms': ['1'],
+			'attributes':['2']
+		}
+
+		response = self.client.post(reverse('booking:create_event', args={self.r1.pk}),  data=post_data)
+		context = response.context
+		status = response.status_code
+
+		self.assertEqual(status, 200)
+		self.assertTemplateUsed(response, 'booking/create_event.html')
+		self.assertIsInstance(context['room'], Room)
+		self.assertIsInstance(context['form'], CreateEventForm)
 
 
-# 	def test_no_required_fields_filled(self):
-# 	def test_some_required_fields_filled(self):
-# 	def test_all_required_fields_filled_correct(self):
-# 	def test_only_setup_date_entered(self):
-# 	def test_all_dates_correctly(self):
-# 	def test_one_date_wrong_format(self):
-# 	def test_some_dates_wrong_format(self):
-# 	def test_all_dates_wrong_format(self):
-# 	def test_event_date_before_setup_date(self):
+	def test_create_event_with_correct_form(self):
+		""" Test that the form redirects to a confirmation page if the correct data is entered"""
+		post_data = {
+			'setupTime_0': ['2014-01-30'],
+			'setupTime_1': ['4:00'],
+			'eventTime_0': ['2014-01-30'],
+			'eventTime_1': ['5:00'],
+			'teardownTime_0': ['2014-01-30'],
+			'teardownTime_1': ['6:00'],
+			"endTime_0": ['2014-01-30'],
+			"endTime_1": ['7:00'],
+			'name': ['Correct Event'],
+			'notes': ['Woohoo!'],
+			'rooms': ['1'],
+			'attributes':['2']
+		}
 
+		response = self.client.post(reverse('booking:create_event', args={self.r1.pk}),  data=post_data)
+		context = response.context
+		status = response.status_code
+
+		self.assertEqual(status, 302)
+		# TODO: Find out which template should be asserted for
+		# self.assertTemplateUsed(response, 'booking/detail.html')
 
 
 class NonExistenceTests(TestCase):

@@ -8,29 +8,12 @@
         {% block stylesheets %}
             <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
             <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
-            <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css">
         {% endblock stylesheets %}
-
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
-
     </head>
     <body>
-
         <form action="{% url 'booking:create_event' room.id %}" method="post">{% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit" />
         </form>
-
-        <script>
-            var setup_dates = function() {
-                $("#id_setupTime").datepicker({ dateFormat: 'yy-mm-dd' });
-                $("#id_eventTime").datepicker({ dateFormat: 'yy-mm-dd' });
-                $("#id_teardownTime").datepicker({ dateFormat: 'yy-mm-dd' });
-                $("#id_endTime").datepicker({ dateFormat: 'yy-mm-dd' });
-            };
-
-            setup_dates();
-        </script>
     </body>
 </html>
