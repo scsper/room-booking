@@ -11,13 +11,18 @@ def index(request):
 def search(request):
     rooms = Room.objects.all()
     attributes = request.GET.getlist('attributes')
-    occupancy = request.GET.get('occupancy', default=0)
+    
+    if request.GET.get('occupancy') == '':
+        occupancy = 0
+    else:
+        occupancy = request.GET.get('occupancy')
 
     rooms = rooms.filter(occupancy__gte=occupancy)
 
-    for attribute in attributes:
-        rooms = rooms.filter(attributes__name=attribute)
+    if len(attributes) != 0:
+        for attribute in attributes:
+            rooms = rooms.filter(attributes__name=attribute)
 
-    return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': attributes})
+    return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': Attribute.objects.all()})
 
 
