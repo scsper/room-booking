@@ -11,11 +11,13 @@ def index(request):
 def search(request):
     rooms = Room.objects.all()
     attributes = request.GET.getlist('attributes')
-    
-    if request.GET.get('occupancy') == '':
-        occupancy = 0
-    else:
-        occupancy = request.GET.get('occupancy')
+    occupancy = request.GET.get('occupancy', default=0)
+
+
+    # if request.GET.get('occupancy') == '':
+    #     occupancy = 0
+    # else:
+    #     occupancy = request.GET.get('occupancy')
 
     rooms = rooms.filter(occupancy__gte=occupancy)
 
