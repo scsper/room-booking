@@ -30,6 +30,9 @@ class CreateEventForm(ModelForm):
         teardownTime = cleaned_data.get('teardownTime')
         endTime = cleaned_data.get('endTime')
 
+        if(not setupTime or not eventTime or not teardownTime or not endTime):
+            raise ValidationError("A required time field was null")
+
         self.verify_order(setupTime, eventTime, teardownTime, endTime)
         self.verify_future(setupTime)
 
@@ -38,12 +41,12 @@ class CreateEventForm(ModelForm):
 
     def verify_order(self, setup, event, teardown, end):
         """ question: why date and time?  couldn't we do it based solely on time? """
-        if(setup.date() > event.date()):
-            raise ValidationError("Setup date cannot be after the event date.")
-        if(event.date() > teardown.date()):
-            raise ValidationError("Event date cannot be after teardown date.")
-        if(teardown.date() > end.date()):
-            raise ValidationError("Teardown date cannot be after end date.")
+        # if(setup.date() > event.date()):
+        #     raise ValidationError("Setup date cannot be after the event date.")
+        # if(event.date() > teardown.date()):
+        #     raise ValidationError("Event date cannot be after teardown date.")
+        # if(teardown.date() > end.date()):
+        #     raise ValidationError("Teardown date cannot be after end date.")
         if(setup > event):
             raise ValidationError("Setup time cannot be after the event time.")
         if(event > teardown or (teardown - event).seconds == 0): # does teardown == event work?
