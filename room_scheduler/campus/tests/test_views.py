@@ -149,6 +149,16 @@ class OccupancySearchViewTests(TestCase):
 		self.assertContains(response, self.r3.name)
 
 
+	def test_when_occupancy_tag_with_no_value(self):
+		""" all rooms should be returned because if the tag exists with an
+			empty string for the value, it should be set to 0"""
+		response = self.client.get(reverse('campus:search'), {'occupancy': ''})
+
+		self.assertContains(response, self.r1.name)
+		self.assertContains(response, self.r2.name)
+		self.assertContains(response, self.r3.name)
+
+
 	def test_when_all_rooms_have_a_higher_occupancy(self):
 		""" all rooms should be returned because all rooms have an occupancy greater than 0 """
 		response = self.client.get(reverse('campus:search'), {'occupancy': 0})
