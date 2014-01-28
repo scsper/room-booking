@@ -19,9 +19,8 @@ def search(request):
 
     rooms = rooms.filter(occupancy__gte=occupancy)
 
-    if len(attributes) != 0:
-        for attribute in attributes:
-            rooms = rooms.filter(attributes__name=attribute)
+    for attribute in attributes:
+        rooms = rooms.filter(attributes__name=attribute)
 
     return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': Attribute.objects.all()})
 
