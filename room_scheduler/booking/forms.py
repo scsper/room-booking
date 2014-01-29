@@ -10,6 +10,7 @@ from booking.models import Event, Series
 from campus.models import Room, Attribute
 
 class CreateEventForm(ModelForm):
+    """ TODO: How to force a field to be required? """
     class Meta:
         model = Event
         exclude = ['series']
@@ -40,19 +41,12 @@ class CreateEventForm(ModelForm):
 
 
     def verify_order(self, setup, event, teardown, end):
-        """ question: why date and time?  couldn't we do it based solely on time? """
-        # if(setup.date() > event.date()):
-        #     raise ValidationError("Setup date cannot be after the event date.")
-        # if(event.date() > teardown.date()):
-        #     raise ValidationError("Event date cannot be after teardown date.")
-        # if(teardown.date() > end.date()):
-        #     raise ValidationError("Teardown date cannot be after end date.")
         if(setup > event):
             raise ValidationError("Setup time cannot be after the event time.")
-        if(event > teardown or (teardown - event).seconds == 0): # does teardown == event work?
-            raise ValidationError("Event time cannot be after teardown time.")
+        if(event > teardown):
+            raise ValidationError("Event time cannot be after the teardown time.")
         if(teardown > end):
-            raise ValidationError("Teardown time cannot be after end time.")
+            raise ValidationError("Teardown time cannot be after the end time.")
 
 
     def verify_future(self, time):
