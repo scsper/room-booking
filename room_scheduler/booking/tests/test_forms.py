@@ -33,8 +33,8 @@ class CreateEventFormTest(TestCase):
             'endTime_1': time(4, 45),
             'name': ['Correct Event'],
             'notes': ['Yay!'],
-            'rooms': ['1'],
-            'attributes':['2']
+            'rooms': ["1"],
+            'attributes': ["1", "2"]
         }
 
 
