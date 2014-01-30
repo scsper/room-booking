@@ -106,13 +106,13 @@ class CreateEventViewTests(TestCase):
 	def test_create_event_with_correct_form(self):
 		""" Test that the form redirects to a confirmation page if the correct data is entered"""
 		post_data = {
-			'setupTime_0': ['2014-01-30'],
+			'setupTime_0': ['2017-01-30'],
 			'setupTime_1': ['4:00'],
-			'eventTime_0': ['2014-01-30'],
+			'eventTime_0': ['2017-01-30'],
 			'eventTime_1': ['5:00'],
-			'teardownTime_0': ['2014-01-30'],
+			'teardownTime_0': ['2017-01-30'],
 			'teardownTime_1': ['6:00'],
-			"endTime_0": ['2014-01-30'],
+			"endTime_0": ['2017-01-30'],
 			"endTime_1": ['7:00'],
 			'name': ['Correct Event'],
 			'notes': ['Woohoo!'],

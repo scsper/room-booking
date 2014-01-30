@@ -23,6 +23,36 @@ class CreateEventForm(ModelForm):
         self.fields['endTime'].widget = widgets.SplitDateTimeWidget()
 
 
+    def save(self, commit=True):
+        data = self.cleaned_data
+        series = self.create_series(data)
+        self.fields['series'] = series
+
+        super(CreateEventForm, self).save(commit=commit)
+
+
+    def create_series(self, data):
+        series = Series(name=data['name'], \
+            notes=data['notes'], \
+            setupTime=data['setupTime'], \
+            eventTime=data['eventTime'], \
+            teardownTime=data['teardownTime'], \
+            endTime=data['endTime'])
+
+        # have to save the model first before adding many to many fields
+        series.save()
+
+        for room in data['rooms']:
+            series.rooms.add(room)
+
+        for attribute in data['attributes']:
+            series.attributes.add(attribute)
+
+        series.save()
+
+        return series
+
+
     def clean(self):
         cleaned_data = super(CreateEventForm, self).clean() # should handle the basic validation like existence and format
 

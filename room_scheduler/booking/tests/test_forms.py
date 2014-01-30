@@ -31,8 +31,8 @@ class CreateEventFormTest(TestCase):
             'teardownTime_1': time(4, 30),
             'endTime_0': date(self.year, 1, 30),
             'endTime_1': time(4, 45),
-            'name': ['Correct Event'],
-            'notes': ['Yay!'],
+            'name': 'Correct Event',
+            'notes': 'Yay!',
             'rooms': ["1"],
             'attributes': ["1", "2"]
         }
@@ -118,4 +118,52 @@ class CreateEventFormTest(TestCase):
 
         self.assertEquals(form.is_valid(), False)
         self.assertEquals(form.errors['__all__'][0], "A required time field was null")
+
+
+    def test_event_is_created(self):
+        form = CreateEventForm(data=self.postData)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        events = Event.objects.all()
+        event = events[0]
+
+        self.assertEquals(len(events), 1)
+        self.assertEquals(event.name, "Correct Event")
+
+
+    def test_series_is_created_for_new_event(self):
+        form = CreateEventForm(data=self.postData)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        series = Series.objects.all()
+        self.assertEquals(len(series), 1)
+        self.assertEquals(series[0].name, "Correct Event")
+
+
+    def test_series_data_matches_event_data(self):
+        form = CreateEventForm(data=self.postData)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        """ TODO: FINISH THIS TEST """
+
+
+    def test_foreign_key_for_event_is_set(self):
+        form = CreateEventForm(data=self.postData)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        series = Series.objects.all()[0]
+        event = Event.objects.all()[0]
+
+        self.assertEquals(event.series, series)
+
+
+
 
