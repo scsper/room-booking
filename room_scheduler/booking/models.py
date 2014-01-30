@@ -30,8 +30,6 @@ class Series(models.Model):
     attributes = models.ManyToManyField(Attribute, null=True, blank=True)
     rooms = models.ManyToManyField(Room, null=True, blank=True)
 
-    # this needs a room
-
     def __unicode__(self):
         return self.name
 
