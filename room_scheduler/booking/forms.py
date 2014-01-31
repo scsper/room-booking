@@ -1,7 +1,5 @@
 from django.forms import ModelForm
 from django.forms import ValidationError
-from django.forms import ModelChoiceField
-
 
 from datetime import datetime
 from django.forms import widgets
