@@ -13,10 +13,10 @@ class InfinitelyRecurringTestCase(TestCase):
 		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
 		self.s1 = Series.objects.create(name='series',
-			setupTime = self.time_now + timedelta(days=1),
-			eventTime = self.time_now + timedelta(days=1, minutes=30),
-			teardownTime = self.time_now + timedelta(days=1, hours=3),
-			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+			setupStartTime = self.time_now + timedelta(days=1),
+			eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+			eventEndTime = self.time_now + timedelta(days=1, hours=3),
+			teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.f1 = Frequency.objects.create(name='freq')
 
 		self.infini = InfinitelyRecurring.objects.create(series_id=self.s1.pk, frequency_id=self.f1.pk)
@@ -35,10 +35,10 @@ class FrequencyTestCase(TestCase):
 
 		self.freq = Frequency.objects.create(name='freq1')
 		self.series = Series.objects.create(name='series',
-			setupTime = self.time_now + timedelta(days=1),
-			eventTime = self.time_now + timedelta(days=1, minutes=30),
-			teardownTime = self.time_now + timedelta(days=1, hours=3),
-			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+			setupStartTime = self.time_now + timedelta(days=1),
+			eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+			eventEndTime = self.time_now + timedelta(days=1, hours=3),
+			teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.infini1 = InfinitelyRecurring.objects.create(series_id=self.series.pk, frequency_id=self.freq.pk)
 		self.infini2 = InfinitelyRecurring.objects.create(series_id=self.series.pk, frequency_id=self.freq.pk)
 

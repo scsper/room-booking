@@ -18,10 +18,10 @@ class CreateEventForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CreateEventForm, self).__init__(*args, **kwargs)
-        self.fields['setupTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['eventTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['teardownTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['endTime'].widget = widgets.SplitDateTimeWidget()
+        self.fields['setupStartTime'].widget = widgets.SplitDateTimeWidget()
+        self.fields['eventStartTime'].widget = widgets.SplitDateTimeWidget()
+        self.fields['eventEndTime'].widget = widgets.SplitDateTimeWidget()
+        self.fields['teardownEndTime'].widget = widgets.SplitDateTimeWidget()
 
 
     def save(self, commit=True):
@@ -40,10 +40,10 @@ class CreateEventForm(ModelForm):
     def create_series(self, data):
         series = Series.objects.create(name=data['name'], \
             notes=data['notes'], \
-            setupTime=data['setupTime'], \
-            eventTime=data['eventTime'], \
-            teardownTime=data['teardownTime'], \
-            endTime=data['endTime'])
+            setupStartTime=data['setupStartTime'], \
+            eventStartTime=data['eventStartTime'], \
+            eventEndTime=data['eventEndTime'], \
+            teardownEndTime=data['teardownEndTime'])
 
         # have to save the model first before adding many to many fields
         series.save()
@@ -62,16 +62,16 @@ class CreateEventForm(ModelForm):
     def clean(self):
         cleaned_data = super(CreateEventForm, self).clean() # should handle the basic validation like existence and format
 
-        setupTime = cleaned_data.get('setupTime')
-        eventTime = cleaned_data.get('eventTime')
-        teardownTime = cleaned_data.get('teardownTime')
-        endTime = cleaned_data.get('endTime')
+        setupStartTime = cleaned_data.get('setupStartTime')
+        eventStartTime = cleaned_data.get('eventStartTime')
+        eventEndTime = cleaned_data.get('eventEndTime')
+        teardownEndTime = cleaned_data.get('teardownEndTime')
 
-        if(not setupTime or not eventTime or not teardownTime or not endTime):
+        if(not setupStartTime or not eventStartTime or not eventEndTime or not teardownEndTime):
             raise ValidationError("A required time field was null")
 
-        self.verify_order(setupTime, eventTime, teardownTime, endTime)
-        self.verify_future(setupTime)
+        self.verify_order(setupStartTime, eventStartTime, eventEndTime, teardownEndTime)
+        self.verify_future(setupStartTime)
 
         return cleaned_data
 

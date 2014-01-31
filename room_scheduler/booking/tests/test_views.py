@@ -21,15 +21,15 @@ class DetailViewTests(TestCase):
 		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
 		self.event1 = Event.objects.create(name='Deacon Meeting',
-			setupTime = self.time_now + timedelta(days=1),
-			eventTime = self.time_now + timedelta(days=1, minutes=30),
-			teardownTime = self.time_now + timedelta(days=1, hours=3),
-			endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+			setupStartTime = self.time_now + timedelta(days=1),
+			eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+			eventEndTime = self.time_now + timedelta(days=1, hours=3),
+			teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 		self.event2 = Event.objects.create(name='Basketball Game',
-			setupTime = self.time_now + timedelta(days=2),
-			eventTime = self.time_now + timedelta(days=2, minutes=30),
-			teardownTime = self.time_now + timedelta(days=2, hours=3),
-			endTime = self.time_now + timedelta(days=2, hours=3, minutes=30))
+			setupStartTime = self.time_now + timedelta(days=2),
+			eventStartTime = self.time_now + timedelta(days=2, minutes=30),
+			eventEndTime = self.time_now + timedelta(days=2, hours=3),
+			teardownEndTime = self.time_now + timedelta(days=2, hours=3, minutes=30))
 
 		self.event1.rooms.add(self.r1)
 		self.event2.rooms.add(self.r1)
@@ -58,10 +58,10 @@ class CreateEventViewTests(TestCase):
 		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
 		# self.series = Series.objects.create(name='series1',
-		# 	setupTime = self.time_now + timedelta(days=1),
-		# 	eventTime = self.time_now + timedelta(days=1, minutes=30),
-		# 	teardownTime = self.time_now + timedelta(days=1, hours=3),
-		# 	endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+		# 	setupStartTime = self.time_now + timedelta(days=1),
+		# 	eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+		# 	eventEndTime = self.time_now + timedelta(days=1, hours=3),
+		# 	teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
 	def test_create_event_with_unfilled_form(self):
 		""" Test that the form displays the view with the right template in the event that the form is unbound"""
@@ -79,14 +79,14 @@ class CreateEventViewTests(TestCase):
 	def test_create_event_with_incorrect_form(self):
 		""" Test that the form does not redirect to a confirmation page if incorrect data is entered"""
 		post_data = {
-			'setupTime_0': ['2014-01-30'],
-			'setupTime_1': ['5:00'],
-			'eventTime_0': ['2014-01-30'],
-			'eventTime_1': ['4:00'],
-			'teardownTime_0': ['2014-01-30'],
-			'teardownTime_1': ['6:00'],
-			"endTime_0": ['2014-01-30'],
-			"endTime_1": ['7:00'],
+			'setupStartTime_0': ['2014-01-30'],
+			'setupStartTime_1': ['5:00'],
+			'eventStartTime_0': ['2014-01-30'],
+			'eventStartTime_1': ['4:00'],
+			'eventEndTime_0': ['2014-01-30'],
+			'eventEndTime_1': ['6:00'],
+			"teardownEndTime_0": ['2014-01-30'],
+			"teardownEndTime_1": ['7:00'],
 			'name': ['Incorrect Event'],
 			'notes': ['The times are backwards!'],
 			'rooms': ['1'],
@@ -106,14 +106,14 @@ class CreateEventViewTests(TestCase):
 	def test_create_event_with_correct_form(self):
 		""" Test that the form redirects to a confirmation page if the correct data is entered"""
 		post_data = {
-			'setupTime_0': ['2017-01-30'],
-			'setupTime_1': ['4:00'],
-			'eventTime_0': ['2017-01-30'],
-			'eventTime_1': ['5:00'],
-			'teardownTime_0': ['2017-01-30'],
-			'teardownTime_1': ['6:00'],
-			"endTime_0": ['2017-01-30'],
-			"endTime_1": ['7:00'],
+			'setupStartTime_0': ['2017-01-30'],
+			'setupStartTime_1': ['4:00'],
+			'eventStartTime_0': ['2017-01-30'],
+			'eventStartTime_1': ['5:00'],
+			'eventEndTime_0': ['2017-01-30'],
+			'eventEndTime_1': ['6:00'],
+			"teardownEndTime_0": ['2017-01-30'],
+			"teardownEndTime_1": ['7:00'],
 			'name': ['Correct Event'],
 			'notes': ['Woohoo!'],
 			'rooms': ['1'],

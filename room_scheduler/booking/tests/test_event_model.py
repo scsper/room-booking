@@ -12,10 +12,10 @@ class EventTestCase(TestCase):
         self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
         self.event = Event.objects.create(name='event',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
     def test_event_name(self):
         self.assertEqual(self.event.name, 'event')
@@ -27,17 +27,17 @@ class EventTestCase(TestCase):
         self.event.notes = 'this, whatever'
         self.assertEqual(self.event.notes, 'this, whatever')
 
-    def test_event_setupTime(self):
-        self.assertEqual(self.event.setupTime, self.time_now + timedelta(days=1))
+    def test_event_setupStartTime(self):
+        self.assertEqual(self.event.setupStartTime, self.time_now + timedelta(days=1))
 
-    def test_event_eventTime(self):
-        self.assertEqual(self.event.eventTime, self.time_now + timedelta(days=1, minutes=30))
+    def test_event_eventStartTime(self):
+        self.assertEqual(self.event.eventStartTime, self.time_now + timedelta(days=1, minutes=30))
 
-    def test_event_teardownTime(self):
-        self.assertEqual(self.event.teardownTime, self.time_now + timedelta(days=1, hours=3))
+    def test_event_eventEndTime(self):
+        self.assertEqual(self.event.eventEndTime, self.time_now + timedelta(days=1, hours=3))
 
-    def test_event_endTime(self):
-        self.assertEqual(self.event.endTime, self.time_now + timedelta(days=1, hours=3, minutes=30))
+    def test_event_teardownEndTime(self):
+        self.assertEqual(self.event.teardownEndTime, self.time_now + timedelta(days=1, hours=3, minutes=30))
 
     def test_event_room(self):
         r1 = Room.objects.create(name='Gym')
@@ -61,16 +61,16 @@ class EventTestCase(TestCase):
 
     def test_events_series(self):
         s1 = Series.objects.create(name='series1',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
         s2 = Series.objects.create(name='series2',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
         s1.event_set.add(self.event)
         self.assertEqual(s1.event_set.all()[0], self.event)

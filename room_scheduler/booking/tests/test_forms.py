@@ -21,14 +21,14 @@ class CreateEventFormTest(TestCase):
 
         self.r1.attributes.add(self.a1, self.a2)
         self.postData = {
-            'setupTime_0': date(self.year, 1, 30),
-            'setupTime_1': time(4, 0),
-            'eventTime_0': date(self.year, 1, 30),
-            'eventTime_1': time(4, 15),
-            'teardownTime_0': date(self.year, 1, 30),
-            'teardownTime_1': time(4, 30),
-            'endTime_0': date(self.year, 1, 30),
-            'endTime_1': time(4, 45),
+            'setupStartTime_0': date(self.year, 1, 30),
+            'setupStartTime_1': time(4, 0),
+            'eventStartTime_0': date(self.year, 1, 30),
+            'eventStartTime_1': time(4, 15),
+            'eventEndTime_0': date(self.year, 1, 30),
+            'eventEndTime_1': time(4, 30),
+            'teardownEndTime_0': date(self.year, 1, 30),
+            'teardownEndTime_1': time(4, 45),
             'name': 'Correct Event',
             'notes': 'Yay!',
             'rooms': ["1"],
@@ -42,7 +42,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_setup_after_event_date(self):
-        self.postData['setupTime_0'] = date(self.year, 3, 15)
+        self.postData['setupStartTime_0'] = date(self.year, 3, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -51,7 +51,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_setup_after_event_time(self):
-        self.postData['setupTime_1'] = time(5, 15)
+        self.postData['setupStartTime_1'] = time(5, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -60,7 +60,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_event_after_teardown_date(self):
-        self.postData['eventTime_0'] = date(self.year, 3, 15)
+        self.postData['eventStartTime_0'] = date(self.year, 3, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -69,7 +69,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_event_after_teardown_time(self):
-        self.postData['eventTime_1'] = time(5, 15)
+        self.postData['eventStartTime_1'] = time(5, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -78,7 +78,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_teardown_after_end_date(self):
-        self.postData['teardownTime_0'] = date(self.year, 3, 15)
+        self.postData['eventEndTime_0'] = date(self.year, 3, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -87,7 +87,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_teardown_after_end_time(self):
-        self.postData['teardownTime_1'] = time(5, 15)
+        self.postData['eventEndTime_1'] = time(5, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -96,7 +96,7 @@ class CreateEventFormTest(TestCase):
 
 
     def test_event_date_not_in_future(self):
-        self.postData['setupTime_0'] = date(2012, 3, 15)
+        self.postData['setupStartTime_0'] = date(2012, 3, 15)
 
         form = CreateEventForm(data=self.postData)
 
@@ -151,10 +151,10 @@ class CreateEventFormTest(TestCase):
         series = Series.objects.all()[0]
         event = Event.objects.all()[0]
 
-        self.assertEquals(series.setupTime, event.setupTime)
-        self.assertEquals(series.eventTime, event.eventTime)
-        self.assertEquals(series.teardownTime, event.teardownTime)
-        self.assertEquals(series.endTime, event.endTime)
+        self.assertEquals(series.setupStartTime, event.setupStartTime)
+        self.assertEquals(series.eventStartTime, event.eventStartTime)
+        self.assertEquals(series.eventEndTime, event.eventEndTime)
+        self.assertEquals(series.teardownEndTime, event.teardownEndTime)
         self.assertEquals(series.name, event.name)
         self.assertEquals(series.notes, event.notes)
         self.assertEquals(series.rooms.all()[0], event.rooms.all()[0])

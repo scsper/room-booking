@@ -12,10 +12,10 @@ class SeriesTestCase(TestCase):
         self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
         self.series = Series.objects.create(name='series1',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
 
     def test_series_name(self):
@@ -31,20 +31,20 @@ class SeriesTestCase(TestCase):
         self.assertEqual(self.series.notes, "this, this, that")
 
 
-    def test_series_setupTime(self):
-        self.assertEqual(self.series.setupTime, self.time_now + timedelta(days=1))
+    def test_series_setupStartTime(self):
+        self.assertEqual(self.series.setupStartTime, self.time_now + timedelta(days=1))
 
 
-    def test_series_eventTime(self):
-        self.assertEqual(self.series.eventTime, self.time_now + timedelta(days=1, minutes=30))
+    def test_series_eventStartTime(self):
+        self.assertEqual(self.series.eventStartTime, self.time_now + timedelta(days=1, minutes=30))
 
 
-    def test_series_teardownTime(self):
-        self.assertEqual(self.series.teardownTime, self.time_now + timedelta(days=1, hours=3))
+    def test_series_eventEndTime(self):
+        self.assertEqual(self.series.eventEndTime, self.time_now + timedelta(days=1, hours=3))
 
 
-    def test_series_endTime(self):
-        self.assertEqual(self.series.endTime, self.time_now + timedelta(days=1, hours=3, minutes=30))
+    def test_series_teardownEndTime(self):
+        self.assertEqual(self.series.teardownEndTime, self.time_now + timedelta(days=1, hours=3, minutes=30))
 
 
     def test_series_attributes(self):
@@ -73,15 +73,15 @@ class SeriesTestCase(TestCase):
 
     def test_series_events(self):
         e1 = Event.objects.create(name='event1',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
         e2 = Event.objects.create(name='event2',
-            setupTime = self.time_now + timedelta(days=1),
-            eventTime = self.time_now + timedelta(days=1, minutes=30),
-            teardownTime = self.time_now + timedelta(days=1, hours=3),
-            endTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
         self.series.event_set.add(e1, e2)
         series_events = self.series.event_set.all()
