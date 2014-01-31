@@ -36,6 +36,8 @@ class CreateEventForm(ModelForm):
         formModel.series = series
         formModel.save()
 
+        return formModel
+
 
     def create_series(self, data):
         series = Series.objects.create(name=data['name'], \
