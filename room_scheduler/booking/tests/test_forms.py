@@ -6,8 +6,6 @@ from datetime import datetime
 from datetime import date
 from datetime import time
 
-
-
 from booking.models import Series, Event, Frequency, InfinitelyRecurring
 from campus.models import Room, Attribute
 from booking.forms import CreateEventForm
@@ -150,7 +148,19 @@ class CreateEventFormTest(TestCase):
 
         form.save()
 
-        """ TODO: FINISH THIS TEST """
+        series = Series.objects.all()[0]
+        event = Event.objects.all()[0]
+
+        self.assertEquals(series.setupTime, event.setupTime)
+        self.assertEquals(series.eventTime, event.eventTime)
+        self.assertEquals(series.teardownTime, event.teardownTime)
+        self.assertEquals(series.endTime, event.endTime)
+        self.assertEquals(series.name, event.name)
+        self.assertEquals(series.notes, event.notes)
+        self.assertEquals(series.rooms.all()[0], event.rooms.all()[0])
+        self.assertEquals(series.attributes.all()[0], event.attributes.all()[0])
+        self.assertEquals(series.attributes.all()[1], event.attributes.all()[1])
+
 
 
     def test_foreign_key_for_event_is_set(self):
