@@ -1,5 +1,7 @@
 from django.forms import ModelForm
 from django.forms import ValidationError
+from django.forms import ModelChoiceField
+
 
 from datetime import datetime
 from django.forms import widgets
@@ -15,6 +17,7 @@ class CreateEventForm(ModelForm):
         model = Event
         exclude = ['series']
 
+
     def __init__(self, *args, **kwargs):
         super(CreateEventForm, self).__init__(*args, **kwargs)
         self.fields['setupTime'].widget = widgets.SplitDateTimeWidget()
@@ -26,13 +29,16 @@ class CreateEventForm(ModelForm):
     def save(self, commit=True):
         data = self.cleaned_data
         series = self.create_series(data)
-        self.fields['series'] = series
 
-        super(CreateEventForm, self).save(commit=commit)
+        formModel = super(CreateEventForm, self).save(commit=commit)
+
+        # add series as a foreign key on the model
+        formModel.series = series
+        formModel.save()
 
 
     def create_series(self, data):
-        series = Series(name=data['name'], \
+        series = Series.objects.create(name=data['name'], \
             notes=data['notes'], \
             setupTime=data['setupTime'], \
             eventTime=data['eventTime'], \
