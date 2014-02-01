@@ -50,6 +50,8 @@ ROOT_URLCONF = 'room_scheduler.urls'
 
 WSGI_APPLICATION = 'room_scheduler.wsgi.application'
 
+SOUTH_TESTS_MIGRATE = False
+
 
 
 # Database
