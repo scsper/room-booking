@@ -16,6 +16,12 @@ def detail(request, room_id):
     return render(request, 'booking/detail.html', {'room': room})
 
 
+def view_event(request, event_id):
+	print "Event ID:", event_id
+	event = get_object_or_404(Event, pk=event_id)
+	return render(request, 'booking/view_event.html', {'event': event})
+
+
 def create_event(request, room_id):
 	room = get_object_or_404(Room, pk=room_id)
 
