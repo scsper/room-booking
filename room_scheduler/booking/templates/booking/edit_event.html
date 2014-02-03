@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>
+            {% block title %}Home{% endblock title %}
+        </title>
+
+        {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap.min.css" %}">
+            <link rel="stylesheet" type="text/css" href="{% static "campus/bootstrap/css/bootstrap-responsive.min.css" %}">
+        {% endblock stylesheets %}
+    </head>
+    <body>
+        <form action="{% url 'booking:edit_event' room.id event.id %}" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+        </form>
+    </body>
+</html>
