@@ -1,7 +1,7 @@
 <h1>{{ room.name }} Events</h1>
 	<ul>
 	{% for event in room.event_set.all %}
-		<li><a href="{% url 'booking:view_event' event.id %}">{{ event.name }}</a></li>
+		<li><a href="{% url 'booking:view_event' room.id event.id %}">{{ event.name }}</a></li>
 	{% empty %}
 		<p>No events listed for this room</p>
 	{% endfor %}

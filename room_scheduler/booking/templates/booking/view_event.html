@@ -1,1 +1,3 @@
 <h1>{{ event.name }}</h1>
+
+<a href="{% url 'booking:edit_event' room.id event.id %}">Edit Event</a>

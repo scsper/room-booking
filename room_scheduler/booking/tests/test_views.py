@@ -57,11 +57,6 @@ class CreateEventViewTests(TestCase):
 		self.time_now = datetime.datetime.now()
 		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
 
-		# self.series = Series.objects.create(name='series1',
-		# 	setupStartTime = self.time_now + timedelta(days=1),
-		# 	eventStartTime = self.time_now + timedelta(days=1, minutes=30),
-		# 	eventEndTime = self.time_now + timedelta(days=1, hours=3),
-		# 	teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
 
 	def test_create_event_with_unfilled_form(self):
 		""" Test that the form displays the view with the right template in the event that the form is unbound"""
@@ -114,17 +109,67 @@ class CreateEventViewTests(TestCase):
 			'eventEndTime_1': ['6:00'],
 			"teardownEndTime_0": ['2017-01-30'],
 			"teardownEndTime_1": ['7:00'],
-			'name': ['Correct Event'],
+			'name': 'Correct Event',
 			'notes': ['Woohoo!'],
 			'rooms': ['1'],
 			'attributes':['2']
 		}
 
-		response = self.client.post(reverse('booking:create_event', args={self.r1.pk}),  data=post_data)
+		response = self.client.post(reverse('booking:create_event', args=[self.r1.pk]),  data=post_data)
 		context = response.context
 		status = response.status_code
 
 		self.assertEqual(status, 302)
+
+		# TODO: Find out which template should be asserted for
+		# self.assertTemplateUsed(response, 'booking/detail.html')
+
+
+class EditEventViewTests(TestCase):
+	def setUp(self):
+		self.r1 = Room.objects.create(name='Gym')
+
+		self.time_now = datetime.datetime.utcnow()
+		self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
+		self.event1 = Event.objects.create(name='Deacon Meeting',
+			setupStartTime = self.time_now + timedelta(days=1),
+			eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+			eventEndTime = self.time_now + timedelta(days=1, hours=3),
+			teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+
+		self.event1.rooms.add(self.r1)
+
+		self.a1 = Attribute.objects.create(name="Projector")
+		self.a2 = Attribute.objects.create(name="Piano")
+
+		self.r1.attributes.add(self.a1, self.a2)
+
+
+	def test_edit_event_with_correct_form(self):
+		""" Test that the edit form changes the model if the correct data is entered"""
+		post_data = {
+			'setupStartTime_0': ['2017-01-30'],
+			'setupStartTime_1': ['4:00'],
+			'eventStartTime_0': ['2017-01-30'],
+			'eventStartTime_1': ['5:00'],
+			'eventEndTime_0': ['2017-01-30'],
+			'eventEndTime_1': ['6:00'],
+			"teardownEndTime_0": ['2017-01-30'],
+			"teardownEndTime_1": ['7:00'],
+			'name': ['Correct Event'],
+			'notes': ['Woohoo!'],
+			'rooms': ['1'],
+			'attributes':['1']
+		}
+
+		response = self.client.post(reverse('booking:edit_event', args=[self.r1.pk, self.event1.pk]),  data=post_data)
+		updatedEvent = Event.objects.get(pk=self.event1.pk)
+		status = response.status_code
+
+		self.assertEqual(status, 302)
+		self.assertEqual(updatedEvent.name, "Correct Event")
+
 		# TODO: Find out which template should be asserted for
 		# self.assertTemplateUsed(response, 'booking/detail.html')
 
