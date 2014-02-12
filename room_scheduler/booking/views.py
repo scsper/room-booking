@@ -8,7 +8,7 @@ import pytz
 from booking.models import Event, Series
 from campus.models import Room, Attribute
 
-from booking.forms import CreateEventForm
+from booking.forms import CreateEventForm, EditEventForm
 
 
 def detail(request, room_id):
@@ -27,14 +27,14 @@ def edit_event(request, room_id, event_id):
 	event = get_object_or_404(Event, pk=event_id)
 
 	if request.method == "POST":
-		form = CreateEventForm(request.POST, instance=event)
+		form = EditEventForm(request.POST, instance=event)
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect(reverse('booking:detail', args=[room.id]))
 		else:
 			print form.errors
 	else:
-		form = CreateEventForm(instance=event)
+		form = EditEventForm(instance=event)
 
 	return render(request, 'booking/edit_event.html', {
 		'form': form,
