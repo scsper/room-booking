@@ -185,5 +185,13 @@ class OccupancySearchViewTests(TestCase):
 		self.assertNotContains(response, self.r2.name)
 		self.assertNotContains(response, self.r3.name)
 
+class ResetSearchViewTest(TestCase):
+
+	def test_when_click_reset_redirect_to_pcampus_index(self):
+		response = self.client.get(reverse('campus:search'), { 'reset': True })
+		self.assertEquals(response.status_code, 302)
+		self.assertTrue(response.has_header('Location'))
+		self.assertEquals(response.get('Location'), 'http://testserver/campus/search')
+
 
 

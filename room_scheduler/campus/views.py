@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from campus.models import Room, Attribute
 
@@ -9,6 +9,10 @@ def index(request):
     return render(request, 'campus/index.html', {'rooms': rooms, 'attributes': attributes})
 
 def search(request):
+    if request.GET.get('reset'):
+        return redirect('/campus/search')
+
+
     rooms = Room.objects.all()
     attributes = request.GET.getlist('attributes')
 
