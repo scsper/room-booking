@@ -34,6 +34,23 @@ class RoomTestCase(TestCase):
         self.assertEquals("Speakers", r1_attrs[1].name)
         self.assertEquals(len(r1_attrs), 2)
 
+    def test_search_with_empty_parameters(self):
+        rooms = Room().search(0, [])
+        self.assertEquals(rooms[0].name, "Gym")
+
+    def test_search_with_occupacy_greater_than_available(self):
+        rooms = Room().search(20, [])
+        self.assertEquals(len(rooms), 0)
+
+    def test_search_with_occupacy_and_attributes(self):
+        attrs = Attribute.objects.all()
+        room = Room(name="Hall", occupancy="50")
+        room.save()
+        room.attributes.add(attrs[0])
+
+        rooms = Room().search(30, ['Piano'])
+        self.assertEquals(len(rooms), 1)
+        self.assertEquals(rooms[0].name, "Hall")
 
 class AttributeTestCase(TestCase):
     def setUp(self):
