@@ -28,7 +28,6 @@ class Room(models.Model):
         except ValueError:
             occupancy = 0;
 
-        print occupancy
         rooms = Room.objects.all()
         rooms = rooms.filter(occupancy__gte=occupancy)
 
