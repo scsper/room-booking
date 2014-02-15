@@ -1,5 +1,11 @@
 language: python
 python:
     - "2.7"
-install: make install
+env:
+    - DJANGO=1.6.2
+install:
+    - pip install -q Django==$DJANGO --use-mirrors
+    - pip install South --use-mirrors
+    - pip install -q -e . --use-mirrors
+    - easy_install --upgrade pytz
 script: make test
