@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+from homepage import views
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -11,4 +12,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^campus/', include('campus.urls', namespace="campus")),
     url(r'^booking/', include('booking.urls', namespace="booking")),
+    url(r'^$', views.index , name="index")
 )

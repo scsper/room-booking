@@ -35,6 +35,7 @@ INSTALLED_APPS = (
     'south',
     'campus',
     'booking',
+    'homepage'
 )
 
 MIDDLEWARE_CLASSES = (
