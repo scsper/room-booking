@@ -181,3 +181,7 @@ class NonExistenceTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Gym Events')
 		self.assertContains(response, 'No events listed for this room')
+
+	def test_failure(self):
+		# to see if travis ci fails
+		self.assertEqual(True, False)
