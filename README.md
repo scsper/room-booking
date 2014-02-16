@@ -1,7 +1,7 @@
 Room Booking Web Scheduler
 ============
 
-[![Build Status](https://travis-ci.org/pablolmiranda/room-booking.png?branch=master)](https://travis-ci.org/pablolmiranda/room-booking)
+[![Build Status](https://travis-ci.org/scsper/room-booking.png?branch=master)](https://travis-ci.org/scsper/room-booking)
 
 An application for churches to schedule and book rooms.
 
