@@ -13,6 +13,8 @@
     <body>
         <form action="{% url 'booking:edit_event' room.id event.id %}" method="post">{% csrf_token %}
         {{ form.as_p }}
+        <input type="radio" name="series" value="one" checked="checked">Only this event<br>
+        <input type="radio" name="series" value="following">All following events<br>
         <input type="submit" value="Submit" />
         </form>
     </body>

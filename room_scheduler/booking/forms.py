@@ -103,5 +103,30 @@ class EditEventForm(EventForm):
     def __init__(self, *args, **kwargs):
         super(EditEventForm, self).__init__(*args, **kwargs)
 
+    def save(self, commit=True):
+        rawData = self.data
+
+        if(rawData['series'] == "following"):
+            self.save_series()
+
+        formModel = super(EditEventForm, self).save(commit=commit)
+
+        return formModel
+
+
+    def save_series(self):
+        series = self.instance.series
+        data = self.cleaned_data
+
+        series.name = data['name']
+        series.notes = data['notes']
+        series.setupStartTime = data['setupStartTime']
+        series.eventStartTime = data['eventStartTime']
+        series.eventEndTime = data['eventEndTime']
+        series.teardownEndTime = data['teardownEndTime']
+
+        print series.attributes.all()
+
+        series.save()
 
 
