@@ -160,7 +160,8 @@ class EditEventViewTests(TestCase):
 			'name': ['Correct Event'],
 			'notes': ['Woohoo!'],
 			'rooms': ['1'],
-			'attributes':['1']
+			'attributes':['1'],
+			'series': ['one']
 		}
 
 		response = self.client.post(reverse('booking:edit_event', args=[self.r1.pk, self.event1.pk]),  data=post_data)
