@@ -1,0 +1,17 @@
+input.textbox {
+    height: 32px;
+}
+
+.form-label {
+    font-size: 16px;
+}
+
+.hours-select, .minutes-select {
+    width: 50px;
+}
+
+.hours-label, .minutes-label {
+    font-size: 16px;
+    display: inline-block;
+    margin: 0 3px;
+}

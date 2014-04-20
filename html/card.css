@@ -1,0 +1,48 @@
+.card {
+    width: 600px;
+    margin: 10px;
+    position: absolute;
+}
+
+.card-title {
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.card-content {
+    padding: 10px;
+}
+
+.card-time {
+    color: #08c;
+    font-size: 18px;
+}
+
+.card-information {
+    margin: 15px 0;
+}
+
+.card-misc {
+    margin: 5px 0;
+}
+
+.card-text {
+    font-size: 16px;
+}
+
+.card-pending {
+    color: red;
+}
+
+.card-approved {
+    color: green;
+}
+
+.divider {
+    width: 580px;
+    height: 1px;
+    margin: 5px 10px;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    border-bottom: 2px solid #08c;
+}
