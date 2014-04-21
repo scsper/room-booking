@@ -15,3 +15,8 @@ input.textbox {
     display: inline-block;
     margin: 0 3px;
 }
+
+.textarea {
+    height: 200px;
+    width: 400px;
+}
