@@ -5,10 +5,11 @@ import pytz
 from datetime import datetime
 from datetime import date
 from datetime import time
+from django.utils import timezone
 
 from booking.models import Series, Event, Frequency, InfinitelyRecurring
 from campus.models import Room, Attribute
-from booking.forms import CreateEventForm
+from booking.forms import CreateEventForm, EditEventForm
 
 
 class CreateEventFormTest(TestCase):
@@ -176,4 +177,58 @@ class CreateEventFormTest(TestCase):
 
 
 
+
+class EditEventFormTest(TestCase):
+    def setUp(self):
+        self.time_now = datetime.now()
+        self.time_now = self.time_now.replace(tzinfo=pytz.utc)
+
+        self.r1 = Room.objects.create(name='Gym')
+        self.a1 = Attribute.objects.create(name="Projector")
+        self.a2 = Attribute.objects.create(name="Piano")
+
+        self.event = Event.objects.create(name='event',
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+
+        self.year = 2017
+
+        self.r1.attributes.add(self.a1, self.a2)
+        self.postData = {
+            'setupStartTime_0': date(self.year, 1, 30),
+            'setupStartTime_1': time(4, 0),
+            'eventStartTime_0': date(self.year, 1, 30),
+            'eventStartTime_1': time(4, 15),
+            'eventEndTime_0': date(self.year, 1, 30),
+            'eventEndTime_1': time(4, 30),
+            'teardownEndTime_0': date(self.year, 1, 30),
+            'teardownEndTime_1': time(4, 45),
+            'name': 'Correct Event',
+            'notes': 'Yay!',
+            'rooms': ["1"],
+            'attributes': ["1", "2"],
+            'series': "one"
+        }
+
+    def test_edit_series(self):
+        form = EditEventForm(data=self.postData, instance=self.event)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        self.assertEquals(self.event.name, "Correct Event")
+        self.assertEquals(self.event.notes, "Yay!")
+
+        # timezone.make_aware gets rid of the following exception:
+        # TypeError: can't compare offset-naive and offset-aware datetimes
+        self.assertEquals(self.event.setupStartTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 0), timezone.get_default_timezone()))
+        self.assertEquals(self.event.eventStartTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 15), timezone.get_default_timezone()))
+        self.assertEquals(self.event.eventEndTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 30), timezone.get_default_timezone()))
+        self.assertEquals(self.event.teardownEndTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 45), timezone.get_default_timezone()))
+
+        self.assertEquals(self.event.rooms.all()[0], self.r1)
+        self.assertEquals(self.event.attributes.all()[0], self.a1)
+        self.assertEquals(self.event.attributes.all()[1], self.a2)
 
