@@ -1,0 +1,30 @@
+.banner {
+    width: 100%;
+    height: 100px;
+    background-color: navy;
+}
+
+.navigation {
+    width: 250px;
+    height: 100%;
+    display: inline-block;
+    position: absolute;
+}
+
+.container {
+    width: 100%;
+}
+
+.content {
+    left: 250px;
+    position: absolute;
+    display: inline-block;
+}
+
+input.search-query {
+    width: 225px;
+}
+
+form.nav-search {
+    margin: 25px 10px 13px;
+}
