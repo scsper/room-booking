@@ -10,6 +10,7 @@ install:
 	sudo apt-get install python-pip
 	sudo pip install django
 	sudo pip install South
+	sudo pip install coverage
 	sudo easy_install --upgrade pytz
 
 conversion:
@@ -37,5 +38,11 @@ test:
 	clear
 	python room_scheduler/manage.py test room_scheduler --settings=room_scheduler.settings.test
 
+coverage:
+	coverage run --source='.' room_scheduler/manage.py test room_scheduler --settings=room_scheduler.settings.test
+	clear
+	coverage report
+	coverage html
+
 clean:
-	rm *.pyc
+	rm -rf htmlcov/
