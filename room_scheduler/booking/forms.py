@@ -125,7 +125,11 @@ class EditEventForm(EventForm):
         series.eventEndTime = data['eventEndTime']
         series.teardownEndTime = data['teardownEndTime']
 
-        print series.attributes.all()
+        for room in data['rooms']:
+            series.rooms.add(room)
+
+        for attribute in data['attributes']:
+            series.attributes.add(attribute)
 
         series.save()
 

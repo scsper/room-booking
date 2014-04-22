@@ -187,11 +187,18 @@ class EditEventFormTest(TestCase):
         self.a1 = Attribute.objects.create(name="Projector")
         self.a2 = Attribute.objects.create(name="Piano")
 
-        self.event = Event.objects.create(name='event',
+        self.series = Series.objects.create(name='event',
             setupStartTime = self.time_now + timedelta(days=1),
             eventStartTime = self.time_now + timedelta(days=1, minutes=30),
             eventEndTime = self.time_now + timedelta(days=1, hours=3),
             teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30))
+
+        self.event = Event.objects.create(name='event',
+            setupStartTime = self.time_now + timedelta(days=1),
+            eventStartTime = self.time_now + timedelta(days=1, minutes=30),
+            eventEndTime = self.time_now + timedelta(days=1, hours=3),
+            teardownEndTime = self.time_now + timedelta(days=1, hours=3, minutes=30),
+            series = self.series)
 
         self.year = 2017
 
@@ -209,10 +216,11 @@ class EditEventFormTest(TestCase):
             'notes': 'Yay!',
             'rooms': ["1"],
             'attributes': ["1", "2"],
-            'series': "one"
+            'series': "following"
         }
 
-    def test_edit_series(self):
+
+    def test_edit_event(self):
         form = EditEventForm(data=self.postData, instance=self.event)
         self.assertEquals(form.is_valid(), True)
 
@@ -231,4 +239,27 @@ class EditEventFormTest(TestCase):
         self.assertEquals(self.event.rooms.all()[0], self.r1)
         self.assertEquals(self.event.attributes.all()[0], self.a1)
         self.assertEquals(self.event.attributes.all()[1], self.a2)
+
+
+    def test_edit_series(self):
+        self.postData['series'] = "following"
+
+        form = EditEventForm(data=self.postData, instance=self.event)
+        self.assertEquals(form.is_valid(), True)
+
+        form.save()
+
+        self.assertEquals(self.series.name, "Correct Event")
+        self.assertEquals(self.series.notes, "Yay!")
+
+        self.assertEquals(self.series.setupStartTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 0), timezone.get_default_timezone()))
+        self.assertEquals(self.series.eventStartTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 15), timezone.get_default_timezone()))
+        self.assertEquals(self.series.eventEndTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 30), timezone.get_default_timezone()))
+        self.assertEquals(self.series.teardownEndTime, timezone.make_aware(datetime(self.year, 1, 30, 4, 45), timezone.get_default_timezone()))
+
+        self.assertEquals(self.series.rooms.all()[0], self.r1)
+        self.assertEquals(self.series.attributes.all()[0], self.a1)
+        self.assertEquals(self.series.attributes.all()[1], self.a2)
+
+
 
