@@ -34,10 +34,10 @@ class Room(models.Model):
     	return ", ".join([attribute.name for attribute in self.attributes.all()])
 
     def search(self, occupancy, attributes):
-        # try:
-        #     occupancy = int(occupancy)
-        # except ValueError:
-        #     occupancy = 0;
+        try:
+            occupancy = int(occupancy)
+        except ValueError:
+            occupancy = 0;
 
         rooms = Room.objects.all()
         rooms = rooms.filter(occupancy__gte=occupancy)

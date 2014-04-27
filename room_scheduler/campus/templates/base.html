@@ -14,7 +14,6 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span2">
-                {% comment %}
                 {% block sidebar %}
                     {% if attributes %}
                         <h1><p>Attributes</p></h1>
@@ -33,8 +32,9 @@
                         <p>No attributes are listed</p>
                     {% endif %}
                 {% endblock sidebar %}
-                {% endcomment %}
 
+
+                {% comment %}
                 {% block sidebar %}
                     <h1><p>Search</p></h1>
                     <form action="{% url 'campus:search' %}" method="GET">
@@ -43,6 +43,7 @@
                         <input class="btn" type=submit value="Reset Search" name="reset">
                     </form>
                 {% endblock sidebar %}
+                {% endcomment %}
             </div>
 
             <div class="span10">
