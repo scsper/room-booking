@@ -17,10 +17,10 @@ class EventForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EventForm, self).__init__(*args, **kwargs)
-        self.fields['setupStartTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['eventStartTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['eventEndTime'].widget = widgets.SplitDateTimeWidget()
-        self.fields['teardownEndTime'].widget = widgets.SplitDateTimeWidget()
+        self.fields['setupStartTime'].widget = widgets.SplitDateTimeWidget(date_format="%m/%d/%Y", time_format='%I:%M %p')
+        self.fields['eventStartTime'].widget = widgets.SplitDateTimeWidget(date_format="%m/%d/%Y", time_format='%I:%M %p')
+        self.fields['eventEndTime'].widget = widgets.SplitDateTimeWidget(date_format="%m/%d/%Y", time_format='%I:%M %p')
+        self.fields['teardownEndTime'].widget = widgets.SplitDateTimeWidget(date_format="%m/%d/%Y", time_format='%I:%M %p')
 
 
     def clean(self):
