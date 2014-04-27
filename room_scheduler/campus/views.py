@@ -38,4 +38,3 @@ def search(request):
 
     return render(request, 'campus/index.html', {'form': form, 'rooms': rooms})
 
-
