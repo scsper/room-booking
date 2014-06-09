@@ -29,8 +29,7 @@ def search(request):
     if request.method == 'GET':
         form = RoomSearchForm(request.GET)
         if form.is_valid():
-            print form.cleaned_data, "\n\n", form.cleaned_data.get('occupancy'), "\n\n"
-            rooms = Room().search(form.cleaned_data.get('occupancy'), form.cleaned_data.get('attributes'))
+            rooms = RoomSearchForm().search(form.cleaned_data.get('occupancy'), form.cleaned_data.get('attributes'))
             return render(request, 'campus/index.html', {'form': form, 'rooms': rooms})
     else:
         form = RoomSearchForm()

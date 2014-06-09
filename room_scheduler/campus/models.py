@@ -29,12 +29,4 @@ class Room(models.Model):
     def get_attributes(self):
     	return ", ".join([attribute.name for attribute in self.attributes.all()])
 
-    def search(self, occupancy, attributes):
-
-        rooms = Room.objects.all()
-        rooms = rooms.filter(occupancy__gte=occupancy)
-
-        for attribute in attributes:
-            rooms = rooms.filter(attributes__name=attribute)
-
-        return rooms
+    

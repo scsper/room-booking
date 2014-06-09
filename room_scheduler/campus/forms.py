@@ -10,10 +10,9 @@ class RoomSearchForm(Form):
 	occupancy = forms.IntegerField(required=False, min_value=0)
 	# startTime = forms.SplitDateTimeField(required=False)
 	# endTime = forms.SplitDateTimeField(required=False)
-
+	
 	def __init__(self, *args, **kwargs):
 		super(RoomSearchForm, self).__init__(*args, **kwargs)
-		# self.fields['attributes'].widget = widgets.CheckboxInput(choices=Attribute.objects.get(pk=1).get_choices())
 		self.fields['attributes'].widget = widgets.SelectMultiple(choices=Attribute().get_choices())
 
 	def clean(self):
@@ -43,6 +42,16 @@ class RoomSearchForm(Form):
 	# 	if(start > end):
 	# 		raise ValidationError("Start Time must be before End Time")
 
+	def search(self, occupancy, attributes):
+
+		rooms = Room.objects.all()
+		print rooms
+		rooms = rooms.filter(occupancy__gte=occupancy)
+
+		for attribute in attributes:
+			rooms = rooms.filter(attributes__name=attribute)
+
+		return rooms
 
 
 
