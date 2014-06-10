@@ -34,27 +34,12 @@ class RoomTestCase(TestCase):
         self.assertEquals("Speakers", r1_attrs[1].name)
         self.assertEquals(len(r1_attrs), 2)
 
-    def test_search_with_empty_parameters(self):
-        rooms = Room().search(0, [])
-        self.assertEquals(rooms[0].name, "Gym")
-
-    def test_search_with_occupacy_greater_than_available(self):
-        rooms = Room().search(20, [])
-        self.assertEquals(len(rooms), 0)
-
-    def test_search_with_occupacy_and_attributes(self):
-        attrs = Attribute.objects.all()
-        room = Room(name="Hall", occupancy="50")
-        room.save()
-        room.attributes.add(attrs[0])
-
-        rooms = Room().search(30, ['Piano'])
-        self.assertEquals(len(rooms), 1)
-        self.assertEquals(rooms[0].name, "Hall")
+    
 
 class AttributeTestCase(TestCase):
     def setUp(self):
         Attribute.objects.create(name="Piano")
+        Attribute.objects.create(name="Chairs")
 
         Room.objects.create(name="Gym")
         Room.objects.create(name="Sanctuary")
@@ -80,4 +65,21 @@ class AttributeTestCase(TestCase):
         self.assertEquals("Sanctuary", a1_rooms[1].name)
         self.assertEquals(len(a1_rooms), 2)
 
+    def test_get_choices(self):
+        attrs = Attribute.objects.all()
 
+        choices = Attribute().get_choices()
+
+        self.assertEquals(choices, [(attrs[0], attrs[0].name), (attrs[1], attrs[1].name)])
+
+
+  ###        ###    ##############
+  ###        ###    ##############
+  ###        ###               ###
+  ###        ###               ###
+  ##############    ##############      This is the answer to life
+  ##############    ##############      the universe and everything
+             ###    ###
+             ###    ###
+             ###    ##############
+             ###    ##############

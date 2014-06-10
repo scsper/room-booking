@@ -9,7 +9,7 @@ class Attribute(models.Model):
         return self.name
 
     def get_rooms(self):
-    	return ", ".join([room.name for room in self.room_set.all()])
+        return ", ".join([room.name for room in self.room_set.all()])
 
     def get_choices(self):
         choices = []
@@ -27,6 +27,6 @@ class Room(models.Model):
         return self.name
 
     def get_attributes(self):
-    	return ", ".join([attribute.name for attribute in self.attributes.all()])
+        return ", ".join([attribute.name for attribute in self.attributes.all()])
 
-    
+

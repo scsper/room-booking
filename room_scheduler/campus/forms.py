@@ -45,7 +45,6 @@ class RoomSearchForm(Form):
 	def search(self, occupancy, attributes):
 
 		rooms = Room.objects.all()
-		print rooms
 		rooms = rooms.filter(occupancy__gte=occupancy)
 
 		for attribute in attributes:
